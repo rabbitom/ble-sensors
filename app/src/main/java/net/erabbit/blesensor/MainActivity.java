@@ -12,6 +12,7 @@ import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -35,7 +37,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class MainActivity extends AppCompatActivity implements BleDeviceScanHandler.BleDeviceScanListener {
+public class MainActivity extends AppCompatActivity
+        implements BleDeviceScanHandler.BleDeviceScanListener, AdapterView.OnItemClickListener {
 
     protected class DeviceAdapter extends ArrayAdapter<BluetoothDevice> {
         int layout_res;
@@ -47,8 +50,7 @@ public class MainActivity extends AppCompatActivity implements BleDeviceScanHand
 
         public View getView(int position, View convertView, ViewGroup parent) {
             View cell = convertView;
-            if(cell == null)
-            {
+            if(cell == null) {
                 LayoutInflater inflater = getLayoutInflater();
                 cell = inflater.inflate(layout_res, parent, false);
             }
@@ -62,6 +64,13 @@ public class MainActivity extends AppCompatActivity implements BleDeviceScanHand
                 signalLabel.setText(getString(R.string.rssi_format, deviceRSSIs.get(device.getAddress())));
             return cell;
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(this, IoTSensorActivity.class);
+        intent.putExtra("BluetoothDevice", devices.get(position));
+        startActivity(intent);
     }
 
     protected ArrayList<BluetoothDevice> devices = new ArrayList<>();
@@ -81,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements BleDeviceScanHand
         deviceList = (ListView)findViewById(R.id.deviceList);
         deviceAdapter = new DeviceAdapter(this, R.layout.device_list_row, devices);
         deviceList.setAdapter(deviceAdapter);
+        deviceList.setOnItemClickListener(this);
         FragmentManager fm = getFragmentManager();
         deviceScanFragment = new DeviceScanFragment();
         FragmentTransaction ft = fm.beginTransaction();
@@ -90,6 +100,8 @@ public class MainActivity extends AppCompatActivity implements BleDeviceScanHand
 
     @Override
     public void onStartScan() {
+        devices.clear();
+        deviceAdapter.notifyDataSetChanged();
         progressDlg = ProgressDialog.show(MainActivity.this,
                 getString(R.string.scanning_title), //title
                 getString(R.string.scanning_msg), //msg
