@@ -1,3 +1,8 @@
+
+// Copyright (c) 2016 Jianlin Hao. All rights reserved.
+// Licensed under the Apache License Version 2.0. See LICENSE file in the project root for full license information.
+// https://github.com/rabbitom
+
 /*
  * Copyright (C) 2013 The Android Open Source Project
  *
