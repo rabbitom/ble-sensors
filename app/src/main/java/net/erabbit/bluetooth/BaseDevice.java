@@ -34,8 +34,11 @@ public abstract class BaseDevice implements Serializable {
         return (btDevice != null) ? btDevice.getAddress() : "";
     }
 
-    public String getBtName() {
-        return (btDevice != null) ? btDevice.getName() : null;
+    public String getBtName(String defaultName) {
+        if(btDevice == null)
+            return null;
+        String btName = btDevice.getName();
+        return (btName != null) ? btName : defaultName;
     }
 
     protected transient Handler msgHandler;
