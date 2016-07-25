@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">BLESensor</string>
+    <string name="copyright">Copyright&#169;2015~2016</string>
+    <string name="vendor_name">www.hyyunjia.com</string>
+    <string name="vendor_email">rabbitom@gmail.com</string>
+    <string name="version">Version</string>
+    <string name="ok_btn">OK</string>
+    <string name="action_scan">Scan</string>
+    <string name="scanning_title">Scan</string>
+    <string name="scanning_msg">Scanning for devices, please wait……</string>
+    <string name="connecting_msg">Connecting device, please wait……</string>
+    <string name="connect_success_msg">Connected to device.</string>
+    <string name="connect_fail_msg">Cannot connect to device.</string>
+    <string name="uuid_prompt">UUID：</string>
+    <string name="rssi_format">RSSI：%ddBm</string>
+    <!--<string name="scan_started">Start Scan</string>-->
+    <string name="connect">Connect</string>
+</resources>
