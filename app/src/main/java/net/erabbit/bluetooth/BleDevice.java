@@ -134,7 +134,7 @@ public class BleDevice extends BaseDevice implements Serializable {
 	}
 	
 	//读特性
-	private void ReadCharacteristic(BluetoothGatt gatt, BluetoothGattService service, UUID charaUuid) {
+	protected void ReadCharacteristic(BluetoothGatt gatt, BluetoothGattService service, UUID charaUuid) {
 		BluetoothGattOperation operation = new BluetoothGattOperation(
 				BluetoothGattOperation.READ_CHARACTERISTIC,
 				gatt,
@@ -145,7 +145,7 @@ public class BleDevice extends BaseDevice implements Serializable {
 	}
 	
 	//写特性
-	private void WriteCharacteristicValue(BluetoothGatt gatt, BluetoothGattService service, UUID charaUuid, byte[] value) {
+	protected void WriteCharacteristicValue(BluetoothGatt gatt, BluetoothGattService service, UUID charaUuid, byte[] value) {
 		BluetoothGattOperation operation = new BluetoothGattOperation(
 				BluetoothGattOperation.WRITE_CHARACTERISTIC,
 				gatt,
@@ -156,7 +156,7 @@ public class BleDevice extends BaseDevice implements Serializable {
 	}
 	
 	//使能通知
-	private void EnableNotification(BluetoothGatt gatt, BluetoothGattService service, UUID charaUuid) {
+	protected void EnableNotification(BluetoothGatt gatt, BluetoothGattService service, UUID charaUuid) {
 		BluetoothGattOperation operation = new BluetoothGattOperation(
 				BluetoothGattOperation.ENABLE_NOTIFICATION,
 				gatt,
@@ -167,7 +167,7 @@ public class BleDevice extends BaseDevice implements Serializable {
 	}
 	
 	//禁止通知
-	private void DisableNotification(BluetoothGatt gatt, BluetoothGattService service, UUID charaUuid) {
+	protected void DisableNotification(BluetoothGatt gatt, BluetoothGattService service, UUID charaUuid) {
 		BluetoothGattOperation operation = new BluetoothGattOperation(
 				BluetoothGattOperation.DISABLE_NOTIFICATION,
 				gatt,
@@ -253,17 +253,8 @@ public class BleDevice extends BaseDevice implements Serializable {
 			public void onCharacteristicRead(BluetoothGatt gatt,
 											 BluetoothGattCharacteristic characteristic,
 											 int status) {
-            /*
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-            	UUID charUuid = characteristic.getUuid();
-                if(charUuid.equals(UUID_BATTERY_LEVEL))
-                {
-                	byte[] data = characteristic.getValue();
-                	if((data != null) && (data.length > 0))
-                		mHandler.sendMessage(mHandler.obtainMessage(UPDATE_BATTERY_LEVEL, data[0], 0));
-                }
-            }
-            */
+				if(status == BluetoothGatt.GATT_SUCCESS)
+					onReceiveCharacteristicValue(characteristic);
 				executeNextOperation();
 			}
 
@@ -287,14 +278,7 @@ public class BleDevice extends BaseDevice implements Serializable {
 			@Override
 			public void onCharacteristicChanged(BluetoothGatt gatt,
 												BluetoothGattCharacteristic characteristic) {
-				UUID uuid = characteristic.getUuid();
-				if (uuid.equals(UUID_MAIN_DATA)) {
-					byte[] data = characteristic.getValue();
-					if (data != null) {
-						Log.i("Ble", "received data: " + CoolUtility.MakeHexString(data));
-						onReceiveData(data);
-					}
-				}
+				onReceiveCharacteristicValue(characteristic);
 			}
 
 			@Override
@@ -306,4 +290,20 @@ public class BleDevice extends BaseDevice implements Serializable {
 		};
 	}
 
+	protected void onReceiveCharacteristicValue(BluetoothGattCharacteristic characteristic) {
+		UUID uuid = characteristic.getUuid();
+		byte[] data = characteristic.getValue();
+		if(data != null) {
+			if((UUID_MAIN_DATA != null) && uuid.equals(UUID_MAIN_DATA)) {
+				Log.i("Ble", "received data: " + CoolUtility.MakeHexString(data));
+				onReceiveData(data);
+			}
+			else
+				onReceiveData(uuid, data);
+		}
+	}
+
+	protected void onReceiveData(UUID uuid, byte[] data) {
+		Log.i("Ble", "received data for " + uuid.toString() + ": " + CoolUtility.MakeHexString(data));
+	}
 }
