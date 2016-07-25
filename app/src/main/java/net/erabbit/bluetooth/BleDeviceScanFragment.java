@@ -54,7 +54,7 @@ implements BluetoothAdapter.LeScanCallback {
     }
 
     protected void onDeviceAdded(BluetoothDevice device, int rssi, byte[] scanRecord) {
-        deviceHandler.sendMessage(deviceHandler.obtainMessage(BleDeviceScanHandler.MSG_FOUND_DEVICE, device));
+        deviceHandler.sendMessage(deviceHandler.obtainMessage(BleDeviceScanHandler.MSG_FOUND_DEVICE, rssi, 0, device));
     }
 
     protected BleDeviceScanHandler deviceHandler;

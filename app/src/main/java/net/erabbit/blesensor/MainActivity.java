@@ -104,8 +104,9 @@ public class MainActivity extends AppCompatActivity implements BleDeviceScanHand
     }
 
     @Override
-    public void onFoundDevice(Object device) {
+    public void onFoundDevice(Object device, int rssi) {
         devices.add((BluetoothDevice) device);
+        deviceRSSIs.put(((BluetoothDevice)device).getAddress(), rssi);
         deviceAdapter.notifyDataSetChanged();
     }
 
@@ -115,8 +116,7 @@ public class MainActivity extends AppCompatActivity implements BleDeviceScanHand
     }
 
     @Override
-    public void onScanRSSIUpdated(int rssi, Object device) {
-        deviceRSSIs.put(((BluetoothDevice)device).getAddress(), rssi);
+    public void onScanRSSIUpdated(Object device, int rssi) {
     }
 
     @Override

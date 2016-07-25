@@ -23,9 +23,9 @@ public class BleDeviceScanHandler extends Handler {
 
     public interface BleDeviceScanListener {
         void onStartScan();
-        void onFoundDevice(Object device);
+        void onFoundDevice(Object device, int rssi);
         void onScanTimeout();
-        void onScanRSSIUpdated(int rssi, Object device);
+        void onScanRSSIUpdated(Object device, int rssi);
     }
 
     protected final WeakReference<BleDeviceScanListener> mActivity;
@@ -44,13 +44,13 @@ public class BleDeviceScanHandler extends Handler {
                 activity.onStartScan();
                 break;
             case MSG_FOUND_DEVICE:
-                activity.onFoundDevice(msg.obj);
+                activity.onFoundDevice(msg.obj, msg.arg1);
                 break;
             case MSG_SCAN_TIMEOUT:
                 activity.onScanTimeout();
                 break;
             case MSG_SCAN_RSSI_UPDATED:
-                activity.onScanRSSIUpdated(msg.arg1, msg.obj);
+                activity.onScanRSSIUpdated(msg.obj, msg.arg1);
                 break;
         }
     }
