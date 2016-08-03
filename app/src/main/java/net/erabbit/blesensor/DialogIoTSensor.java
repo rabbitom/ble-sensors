@@ -26,6 +26,8 @@ public class DialogIoTSensor extends BleDevice {
         private UUID uuid;
         private int keyOffset;
         private int valueCount;
+        private float rangeMin = 0;
+        private float rangeMax = 0;
 
         public UUID getUuid() {
             return uuid;
@@ -33,6 +35,14 @@ public class DialogIoTSensor extends BleDevice {
 
         public int getKeyOffset() {
             return keyOffset;
+        }
+
+        public int getValueCount() {
+            return valueCount;
+        }
+
+        public float[] getValueRange() {
+            return new float[]{rangeMin, rangeMax};
         }
 
         SensorFeature(String uuidString, int keyOffset, int valueCount) {
@@ -137,6 +147,13 @@ public class DialogIoTSensor extends BleDevice {
         UUID_MAIN_SERVICE = UUID.fromString("2ea78970-7d44-44bb-b097-26183f402400");
         UUID_MAIN_CONFIG = UUID.fromString("2ea78970-7d44-44bb-b097-26183f402409");//CONTROL_POINT
         UUID_MAIN_DATA = UUID.fromString("2ea78970-7d44-44bb-b097-26183f40240A");//CONTROL_REPLY
+        //From BME280 datasheet
+        SensorFeature.HUMIDITY.rangeMin = 0;
+        SensorFeature.HUMIDITY.rangeMax = 100;
+        SensorFeature.BAROMETER.rangeMin =  30000;
+        SensorFeature.BAROMETER.rangeMax = 110000;
+        SensorFeature.TEMPERATURE.rangeMin = -40;
+        SensorFeature.TEMPERATURE.rangeMax = 85;
     }
 
     @Override

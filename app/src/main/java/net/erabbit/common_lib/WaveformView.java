@@ -20,10 +20,10 @@ public class WaveformView extends View {
 	protected int bgColor;
 	protected Paint paint = new Paint();
 	
-	protected int[] values;
+	protected float[] values;
 	protected float[] points;
 	protected int startPos;
-	protected int minValue, maxValue;
+	protected float minValue, maxValue;
 	protected boolean fixedBounds;
 	
 	public WaveformView(Context context, AttributeSet set) {
@@ -87,58 +87,54 @@ public class WaveformView extends View {
 		bgColor = color;
 	}
 	
-	protected float makePoint(int value, int min, int max) {
+	protected float makePoint(float value, float min, float max) {
 		float fValue = Math.min(Math.max(value, min), max);
 		return height - (fValue - min) / (max - min) * height;
 	}
 	
-	public void setWave(int[] configs) {
-		if(configs.length == 3)
-			setWave(configs[0], configs[1], configs[2]);
+//	public void setWave(int[] configs) {
+//		if(configs.length == 3)
+//			setWave(configs[0], configs[1], configs[2]);
+//	}
+	public void setWave(int valueDensity, float[] valueRange) {
+		if((valueRange != null) && (valueRange.length == 2))
+			setWave(valueDensity, valueRange[0], valueRange[1]);
 	}
-	
-	protected void setWave(int valueCount, int minValue, int maxValue) {
+
+	public void setWave(int valueCount, float minValue, float maxValue) {
 		points = new float[valueCount];
-		values = new int[valueCount];
+		values = new float[valueCount];
 		this.minValue = minValue;
 		this.maxValue = maxValue;
-		fixedBounds = (maxValue > minValue) ? true : false;
+		fixedBounds = (maxValue > minValue);
 		startPos = valueCount;
 	}
 	
-	public void addValues(int[] newValues) {
-		int valueCount = points.length;
-		int newCount = newValues.length;
-		if(newCount < valueCount) {
-			for(int i=0; i<valueCount-newCount; i++)
-				//points[i] = points[i+newCount];
-				values[i] = values[i+newCount];
-			for(int j=0; j<newCount; j++)
-				//points[valueCount-newCount+j] = makePoint(newValues[j], defaultMin, defaultMax);
-				values[valueCount-newCount+j] = newValues[j];
+	public void addValues(float[] newValues, int valueCount) {
+		int pointCount = points.length;
+		if(valueCount < pointCount) {
+			System.arraycopy(values, valueCount, values, 0, pointCount-valueCount);
+			System.arraycopy(newValues, 0, values, pointCount-valueCount, valueCount);
 		}
 		else
-			for(int i=0; i<valueCount; i++)
-				//points[i] = makePoint(newValues[newCount-valueCount+i], defaultMin, defaultMax);
-				values[i] = newValues[newCount-valueCount+i];
+			System.arraycopy(newValues, valueCount-pointCount, values, 0, pointCount);
 		if(startPos > 0)
-			startPos -= newCount;
+			startPos -= valueCount;
 		if(startPos < 0)
 			startPos = 0;
 		if(fixedBounds)
-			for(int i=startPos; i<valueCount; i++)
+			for(int i=startPos; i<pointCount; i++)
 				points[i] = makePoint(values[i], minValue, maxValue);
 		else {
-			//��̬�������ֵ����Сֵ
 			if(maxValue <= minValue) {
 				minValue = values[startPos];
 				maxValue = values[startPos];
 			}
-			for(int i=startPos; i<valueCount; i++) {
+			for(int i=startPos; i<pointCount; i++) {
 				minValue = Math.min(minValue, values[i]);
 				maxValue = Math.max(maxValue, values[i]);
 			}
-			for(int j=startPos; j<valueCount; j++)
+			for(int j=startPos; j<pointCount; j++)
 				points[j] = makePoint(values[j], minValue, maxValue);
 		}
 		invalidate();

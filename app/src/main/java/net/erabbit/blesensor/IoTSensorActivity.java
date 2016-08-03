@@ -1,5 +1,6 @@
 package net.erabbit.blesensor;
 
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.app.AlertDialog;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +51,7 @@ public class IoTSensorActivity extends AppCompatActivity
         }
     }
 
-    protected class FeatureAdapter extends BaseAdapter {
+    protected class FeatureAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
 
         @Override
         public int getCount() {
@@ -73,11 +75,19 @@ public class IoTSensorActivity extends AppCompatActivity
             }
         };
 
-        AdapterView.OnItemClickListener featureClickListener = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            }
-        };
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            curFeatureIndex = position;
+            View featureWaveformView = featureWaveform.getView();
+            if(featureWaveformView != null)
+                featureWaveformView.setVisibility(View.VISIBLE);
+            if(waveformView == null)
+                waveformView = featureWaveform.getWaveformView();
+            waveformView.setup();
+            DialogIoTSensor.SensorFeature feature = (DialogIoTSensor.SensorFeature) getItem(position);
+            featureWaveform.getTitle().setText(feature.name());
+            waveformView.setWave(320, 0, 0);
+        }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
@@ -104,7 +114,10 @@ public class IoTSensorActivity extends AppCompatActivity
     protected ListView featureList;
     protected FeatureAdapter featureAdapter;
 
+    protected int curFeatureIndex= -1;
+
     protected Switch allSensorSwitch;
+    protected WaveformFragment featureWaveform;
     protected WaveformView waveformView;
 
     protected AlertDialog progressDlg;
@@ -131,14 +144,10 @@ public class IoTSensorActivity extends AppCompatActivity
         featureList = (ListView)findViewById(R.id.featureList);
         featureAdapter = new FeatureAdapter();
         featureList.setAdapter(featureAdapter);
+        featureList.setOnItemClickListener(featureAdapter);
         allSensorSwitch = (Switch)findViewById(R.id.allSensorSwitch);
         if(allSensorSwitch != null)
             allSensorSwitch.setOnClickListener(this);
-        waveformView = (WaveformView)findViewById(R.id.waveform);
-        if(waveformView != null) {
-            waveformView.setup();
-            waveformView.setWave(new int[]{320, 0, 100});
-        }
         setTitle(sensor.getBtName("IoT Sensor"));
         deviceHandler = new BleDeviceMsgHandler(this);
         if(!sensor.isConnected()) {
@@ -150,6 +159,11 @@ public class IoTSensorActivity extends AppCompatActivity
             });
             sensor.connect(this, deviceHandler);
         }
+        FragmentManager fragmentManager = getFragmentManager();
+        featureWaveform = (WaveformFragment)fragmentManager.findFragmentById(R.id.featureWaveform);
+        View featureWaveformView = featureWaveform.getView();
+        if(featureWaveformView != null)
+            featureWaveformView.setVisibility(View.GONE);
     }
 
     @Override
@@ -203,19 +217,18 @@ public class IoTSensorActivity extends AppCompatActivity
                 break;
             case DialogIoTSensor.VALUE_OF_SENSOR_FEATURE: {
                 int position = valueParam;
+                DialogIoTSensor.SensorFeature sensorFeature = sensor.getFeature(position);
                 int firstVisiblePosition = featureList.getFirstVisiblePosition();
                 int lastVisiblePosition = featureList.getLastVisiblePosition();
                 if ((position >= firstVisiblePosition) && (position <= lastVisiblePosition)) {
                     View view = featureList.getChildAt(position - firstVisiblePosition);
                     if (view.getTag() instanceof FeatureViewHolder) {
                         FeatureViewHolder vh = (FeatureViewHolder) view.getTag();
-                        vh.updateValue(sensor.getFeature(position));
+                        vh.updateValue(sensorFeature);
                     }
                 }
-                DialogIoTSensor.SensorFeature sensorFeature = sensor.getFeature(position);
-                if(sensorFeature == DialogIoTSensor.SensorFeature.HUMIDITY) {
-                    waveformView.addValues(new int[]{(int)sensorFeature.getValues()[0]});
-                }
+                if((curFeatureIndex == position) && (waveformView != null))
+                    waveformView.addValues(sensorFeature.getValues(), sensorFeature.getValueCount());
             }
                 break;
         }
