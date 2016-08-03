@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Switch;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import net.erabbit.bluetooth.BleDeviceMsgHandler;
+import net.erabbit.common_lib.WaveformView;
 
 /**
  * Created by Tom on 16/7/21.
@@ -71,6 +73,12 @@ public class IoTSensorActivity extends AppCompatActivity
             }
         };
 
+        AdapterView.OnItemClickListener featureClickListener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            }
+        };
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View cell = convertView;
@@ -97,6 +105,7 @@ public class IoTSensorActivity extends AppCompatActivity
     protected FeatureAdapter featureAdapter;
 
     protected Switch allSensorSwitch;
+    protected WaveformView waveformView;
 
     protected AlertDialog progressDlg;
 
@@ -125,6 +134,11 @@ public class IoTSensorActivity extends AppCompatActivity
         allSensorSwitch = (Switch)findViewById(R.id.allSensorSwitch);
         if(allSensorSwitch != null)
             allSensorSwitch.setOnClickListener(this);
+        waveformView = (WaveformView)findViewById(R.id.waveform);
+        if(waveformView != null) {
+            waveformView.setup();
+            waveformView.setWave(new int[]{320, 0, 100});
+        }
         setTitle(sensor.getBtName("IoT Sensor"));
         deviceHandler = new BleDeviceMsgHandler(this);
         if(!sensor.isConnected()) {
@@ -197,6 +211,10 @@ public class IoTSensorActivity extends AppCompatActivity
                         FeatureViewHolder vh = (FeatureViewHolder) view.getTag();
                         vh.updateValue(sensor.getFeature(position));
                     }
+                }
+                DialogIoTSensor.SensorFeature sensorFeature = sensor.getFeature(position);
+                if(sensorFeature == DialogIoTSensor.SensorFeature.HUMIDITY) {
+                    waveformView.addValues(new int[]{(int)sensorFeature.getValues()[0]});
                 }
             }
                 break;

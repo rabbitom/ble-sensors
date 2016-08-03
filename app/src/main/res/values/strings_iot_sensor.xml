@@ -2,4 +2,5 @@
 <resources>
     <string name="firmware_version">Firmware version: %s</string>
     <string name="all_sensor">All Sensor</string>
+    <string name="hide">Hide</string>
 </resources>
