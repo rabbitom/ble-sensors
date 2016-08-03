@@ -21,7 +21,8 @@ import net.erabbit.bluetooth.BleDeviceMsgHandler;
 /**
  * Created by Tom on 16/7/21.
  */
-public class IoTSensorActivity extends AppCompatActivity implements BleDeviceMsgHandler.BleDeviceMsgListener {
+public class IoTSensorActivity extends AppCompatActivity
+        implements BleDeviceMsgHandler.BleDeviceMsgListener, View.OnClickListener {
 
     protected class FeatureViewHolder {
         TextView featureName;
@@ -66,7 +67,7 @@ public class IoTSensorActivity extends AppCompatActivity implements BleDeviceMsg
         View.OnClickListener featureSwitchListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sensor.switchSensor((DialogIoTSensor.SensorFeature)v.getTag(), ((Switch)v).isChecked());
+                sensor.switchSensorFeature((DialogIoTSensor.SensorFeature)v.getTag(), ((Switch)v).isChecked());
             }
         };
 
@@ -95,6 +96,8 @@ public class IoTSensorActivity extends AppCompatActivity implements BleDeviceMsg
     protected ListView featureList;
     protected FeatureAdapter featureAdapter;
 
+    protected Switch allSensorSwitch;
+
     protected AlertDialog progressDlg;
 
     protected BleDeviceMsgHandler deviceHandler;
@@ -119,6 +122,9 @@ public class IoTSensorActivity extends AppCompatActivity implements BleDeviceMsg
         featureList = (ListView)findViewById(R.id.featureList);
         featureAdapter = new FeatureAdapter();
         featureList.setAdapter(featureAdapter);
+        allSensorSwitch = (Switch)findViewById(R.id.allSensorSwitch);
+        if(allSensorSwitch != null)
+            allSensorSwitch.setOnClickListener(this);
         setTitle(sensor.getBtName("IoT Sensor"));
         deviceHandler = new BleDeviceMsgHandler(this);
         if(!sensor.isConnected()) {
@@ -176,18 +182,31 @@ public class IoTSensorActivity extends AppCompatActivity implements BleDeviceMsg
 
     @Override
     public void onValueChanged(String btAddress, int valueId, int valueParam) {
-        if(valueId == DialogIoTSensor.VALUE_OF_SENSOR) {
-            int position = valueParam;
-            int firstVisiblePosition = featureList.getFirstVisiblePosition();
-            int lastVisiblePosition = featureList.getLastVisiblePosition();
-            if((position >= firstVisiblePosition) && (position <= lastVisiblePosition)) {
-                View view = featureList.getChildAt(position - firstVisiblePosition);
-                if(view.getTag() instanceof FeatureViewHolder){
-                    FeatureViewHolder vh = (FeatureViewHolder)view.getTag();
-                    vh.updateValue(sensor.getFeature(position));
+        switch(valueId) {
+            case DialogIoTSensor.VALUE_OF_SENSOR_SWITCH: {
+                allSensorSwitch.setChecked(valueParam > 0);
+            }
+                break;
+            case DialogIoTSensor.VALUE_OF_SENSOR_FEATURE: {
+                int position = valueParam;
+                int firstVisiblePosition = featureList.getFirstVisiblePosition();
+                int lastVisiblePosition = featureList.getLastVisiblePosition();
+                if ((position >= firstVisiblePosition) && (position <= lastVisiblePosition)) {
+                    View view = featureList.getChildAt(position - firstVisiblePosition);
+                    if (view.getTag() instanceof FeatureViewHolder) {
+                        FeatureViewHolder vh = (FeatureViewHolder) view.getTag();
+                        vh.updateValue(sensor.getFeature(position));
+                    }
                 }
             }
+                break;
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        if(v == allSensorSwitch) {
+            sensor.switchSensor(allSensorSwitch.isChecked());
+        }
+    }
 }

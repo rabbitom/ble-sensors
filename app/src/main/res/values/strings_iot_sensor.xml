@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="firmware_version">Firmware version: %s</string>
+    <string name="all_sensor">All Sensor</string>
 </resources>

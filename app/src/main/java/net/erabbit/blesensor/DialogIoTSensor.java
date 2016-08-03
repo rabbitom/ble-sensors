@@ -181,9 +181,11 @@ public class DialogIoTSensor extends BleDevice {
                     break;
                 case SensorOn:
                     sensorOn = true;
+                    onValueChange(VALUE_OF_SENSOR_SWITCH, 1);
                     break;
                 case SensorOff:
                     sensorOn = false;
+                    onValueChange(VALUE_OF_SENSOR_SWITCH, 0);
                     break;
             }
     }
@@ -280,14 +282,15 @@ public class DialogIoTSensor extends BleDevice {
             for(SensorFeature feature : features) {
                 if(uuid.equals(feature.getUuid())) {
                     if(feature.parseValue(data, settings))
-                        onValueChange(VALUE_OF_SENSOR, features.indexOf(feature));
+                        onValueChange(VALUE_OF_SENSOR_FEATURE, features.indexOf(feature));
                     break;
                 }
             }
         }
     }
 
-    public static final int VALUE_OF_SENSOR = 1;
+    public static final int VALUE_OF_SENSOR_SWITCH = 1;
+    public static final int VALUE_OF_SENSOR_FEATURE = 2;
 
     protected ArrayList<SensorFeature> features = new ArrayList<>();
 
@@ -304,7 +307,8 @@ public class DialogIoTSensor extends BleDevice {
         return features.get(index);
     }
 
-    private String firmwareVersion = "unknown";
+    private static final String FIRMWARE_VERSION_UNKNOWN = "unknown";
+    private String firmwareVersion = FIRMWARE_VERSION_UNKNOWN;
 
     public String getFirmwareVersion() {
         return firmwareVersion;
@@ -312,14 +316,18 @@ public class DialogIoTSensor extends BleDevice {
 
     private boolean sensorOn = false;
 
-    public void switchSensor(SensorFeature sensorFeature, boolean onOff) {
+    public void switchSensorFeature(SensorFeature sensorFeature, boolean onOff) {
         if(onOff) {
             if(!sensorOn)
-                sendData(new byte[]{1, 0});
+                switchSensor(true);
             EnableNotification(btGatt, btService, sensorFeature.getUuid());
         }
         else
             DisableNotification(btGatt, btService, sensorFeature.getUuid());
         sensorFeature.enabled = onOff;
+    }
+
+    public void switchSensor(boolean onOff) {
+        sendData(new byte[]{onOff ? ControlCommand.SensorOn.getId() : ControlCommand.SensorOff.getId()});
     }
 }
