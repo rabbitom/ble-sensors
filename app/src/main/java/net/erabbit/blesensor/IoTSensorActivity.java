@@ -78,15 +78,10 @@ public class IoTSensorActivity extends AppCompatActivity
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             curFeatureIndex = position;
-            View featureWaveformView = featureWaveform.getView();
-            if(featureWaveformView != null)
-                featureWaveformView.setVisibility(View.VISIBLE);
+            DialogIoTSensor.SensorFeature feature = (DialogIoTSensor.SensorFeature) getItem(position);
+            featureWaveform.show(feature.name());
             if(waveformView == null)
                 waveformView = featureWaveform.getWaveformView();
-            waveformView.setup();
-            DialogIoTSensor.SensorFeature feature = (DialogIoTSensor.SensorFeature) getItem(position);
-            featureWaveform.getTitle().setText(feature.name());
-            waveformView.setWave(320, 0, 0);
         }
 
         @Override
@@ -228,7 +223,7 @@ public class IoTSensorActivity extends AppCompatActivity
                     }
                 }
                 if((curFeatureIndex == position) && (waveformView != null))
-                    waveformView.addValues(sensorFeature.getValues(), sensorFeature.getValueCount());
+                    waveformView.addValues(sensorFeature.getValues(), 1);
             }
                 break;
         }

@@ -46,10 +46,24 @@ public class WaveformFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if(v == hide) {
-            waveformView.done();
-            View view = getView();
-            if(view != null)
-                view.setVisibility(View.GONE);
+            hide();
         }
+    }
+
+    public void show(CharSequence titleText) {
+        View view = getView();
+        if(view != null)
+            view.setVisibility(View.VISIBLE);
+        waveformView.startDrawing();
+        title.setText(titleText);
+        waveformView.clearValues();
+        waveformView.setValueRange(new float[]{0,0});
+    }
+
+    public void hide() {
+        waveformView.stopDrawing();
+        View view = getView();
+        if(view != null)
+            view.setVisibility(View.GONE);
     }
 }
