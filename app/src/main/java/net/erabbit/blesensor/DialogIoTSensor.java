@@ -21,7 +21,7 @@ public class DialogIoTSensor extends BleDevice {
         BAROMETER(      3, "2ea78970-7d44-44bb-b097-26183f402404", 1, "Pa", 0),//Pressure
         HUMIDITY(       5, "2ea78970-7d44-44bb-b097-26183f402405", 1, "%", 0),
         TEMPERATURE(    4, "2ea78970-7d44-44bb-b097-26183f402406", 1, "°C", 2),
-        SFL(            6, "2ea78970-7d44-44bb-b097-26183f402407", 3, "", 0);
+        SFL(            6, "2ea78970-7d44-44bb-b097-26183f402407", 4, "", 0);
 
         private UUID uuid;
         private int keyOffset;
@@ -67,7 +67,7 @@ public class DialogIoTSensor extends BleDevice {
 
         private boolean valueParsed = false;
 
-        private float[] values = new float[3];
+        private float[] values = new float[4];
 
         public float[] getValues() {
             return values;
@@ -109,6 +109,14 @@ public class DialogIoTSensor extends BleDevice {
                     values[0] = CoolUtility.toIntLE(data, 3, 4) * 0.01f;//in degree celsius
                     break;
                 case SFL:
+//                    var wx = evothings.util.littleEndianToInt16(data, 3);
+//                    var ax = evothings.util.littleEndianToInt16(data, 5);
+//                    var ay = evothings.util.littleEndianToInt16(data, 7);
+//                    var az = evothings.util.littleEndianToInt16(data, 9);
+                    for(int i=0; i<dimension; i++)
+                        values[i] = (short)CoolUtility.toIntLE(data, 3+2*i, 2);
+                    break;
+                default:
                     return false;
             }
             valueParsed = true;
@@ -118,22 +126,6 @@ public class DialogIoTSensor extends BleDevice {
         public String getValueString() {
             if(!valueParsed)
                 return "no value";
-//            switch(this) {
-//                case ACCELEROMETER:
-//                    return String.format(Locale.getDefault(), "[x,y,z] = [%.2f, %.2f, %.2f] g", values[0], values[1], values[2]);
-//                case GYROSCOPE:
-//                    return String.format(Locale.getDefault(), "[x,y,z] = [%.2f, %.2f, %.2f] deg/s", values[0], values[1], values[2]);
-//                case MAGNETOMETER:
-//                    return String.format(Locale.getDefault(), "[x,y,z] = [%d, %d, %d] uT", (int)values[0], (int)values[1], (int)values[2]);
-//                case BAROMETER:
-//                    return String.format(Locale.getDefault(), "%d Pa", (int)values[0]);
-//                case HUMIDITY:
-//                    return String.format(Locale.getDefault(), "%d %%", (int)values[0]);
-//                case TEMPERATURE:
-//                    return String.format(Locale.getDefault(), "%.2f °C", values[0]);
-//                case SFL:
-//                    return "not parsed";
-//            }
             String prefix = "";
             String valueString = null;
             if(dimension == 1)
