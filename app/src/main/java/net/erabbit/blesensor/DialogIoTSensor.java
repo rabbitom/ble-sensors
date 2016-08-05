@@ -25,7 +25,7 @@ public class DialogIoTSensor extends BleDevice {
 
         private UUID uuid;
         private int keyOffset;
-        private int valueCount;
+        private int dimension;
         private String unit;
         private int precision;
 
@@ -40,18 +40,18 @@ public class DialogIoTSensor extends BleDevice {
             return keyOffset;
         }
 
-        public int getValueCount() {
-            return valueCount;
+        public int getDimension() {
+            return dimension;
         }
 
         public float[] getValueRange() {
             return new float[]{rangeMin, rangeMax};
         }
 
-        SensorFeature(int keyOffset, String uuidString, int valueCount, String unit, int precision) {
+        SensorFeature(int keyOffset, String uuidString, int dimension, String unit, int precision) {
             this.uuid = UUID.fromString(uuidString);
             this.keyOffset = keyOffset;
-            this.valueCount = valueCount;
+            this.dimension = dimension;
             this.unit = unit;
             this.precision = precision;
         }
@@ -79,21 +79,21 @@ public class DialogIoTSensor extends BleDevice {
 //                    var ax = (evothings.util.littleEndianToInt16(data, 3) / sensitvity).toFixed(2);
 //                    var ay = (evothings.util.littleEndianToInt16(data, 5) / sensitvity).toFixed(2);
 //                    var az = (evothings.util.littleEndianToInt16(data, 7) / sensitvity).toFixed(2);
-                    for(int i=0; i<valueCount; i++)
+                    for(int i = 0; i< dimension; i++)
                         values[i] = (short) CoolUtility.toIntLE(data, 3+2*i, 2) / (float)settings.accelerometerRange.getSensitivity();
                     break;
                 case GYROSCOPE://in deg/s
 //                    var ax = (evothings.util.littleEndianToInt16(data, 3) / sensitvity).toFixed(2);
 //                    var ay = (evothings.util.littleEndianToInt16(data, 5) / sensitvity).toFixed(2);
 //                    var az = (evothings.util.littleEndianToInt16(data, 7) / sensitvity).toFixed(2);
-                    for(int i=0; i<valueCount; i++)
+                    for(int i = 0; i< dimension; i++)
                         values[i] = (short) CoolUtility.toIntLE(data, 3+2*i, 2) / settings.gyroScopeRange.getSensitivity();
                     break;
                 case MAGNETOMETER://in micro Tesla
 //                    var ax = evothings.util.littleEndianToInt16(data, 3);
 //                    var ay = evothings.util.littleEndianToInt16(data, 5);
 //                    var az = evothings.util.littleEndianToInt16(data, 7);
-                    for(int i=0; i<valueCount; i++)
+                    for(int i = 0; i< dimension; i++)
                         values[i] = (short) CoolUtility.toIntLE(data, 3+2*i, 2);
                     break;
                 case BAROMETER:
@@ -136,13 +136,13 @@ public class DialogIoTSensor extends BleDevice {
 //            }
             String prefix = "";
             String valueString = null;
-            if(valueCount == 1)
+            if(dimension == 1)
                 valueString = valueString(values[0]);
             else {
-                if(valueCount == 3)
+                if(dimension == 3)
                     prefix = "[x,y,z] = ";
                 valueString = "[";
-                for(int i=0; i<valueCount; i++) {
+                for(int i = 0; i< dimension; i++) {
                     if(i > 0)
                         valueString += ", ";
                     valueString += valueString(values[i]);

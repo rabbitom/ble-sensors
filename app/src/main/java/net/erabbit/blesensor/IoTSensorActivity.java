@@ -4,12 +4,10 @@ import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.app.AlertDialog;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,7 +78,7 @@ public class IoTSensorActivity extends AppCompatActivity
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             curFeatureIndex = position;
             DialogIoTSensor.SensorFeature feature = (DialogIoTSensor.SensorFeature) getItem(position);
-            featureWaveform.show(feature.name(), feature.getValueCount());
+            featureWaveform.show(feature.name(), feature.getDimension());
             if(waveformView == null)
                 waveformView = featureWaveform.getWaveformView();
         }
