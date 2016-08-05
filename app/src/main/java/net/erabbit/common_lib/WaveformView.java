@@ -19,7 +19,8 @@ public class WaveformView extends View {
 	protected int width;
 	protected int height;
 	protected int bgColor;
-	protected Paint paint;
+	protected Paint[] paints;
+	float density;
 
 	protected int dimension = 1;
 	protected float[] values;
@@ -32,6 +33,8 @@ public class WaveformView extends View {
 	
 	public WaveformView(Context context, AttributeSet set) {
 		super(context, set);
+		DisplayMetrics dm = getResources().getDisplayMetrics();
+		density = dm.density;
 	}
 	
 	@SuppressLint("DrawAllocation")
@@ -39,35 +42,59 @@ public class WaveformView extends View {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		if(customDraw) {
-			DisplayMetrics dm = getResources().getDisplayMetrics();
-			float density = dm.density;
 			if(!initialized) {
-				paint = new Paint();
-				paint.setColor(Color.WHITE);
-				paint.setStyle(Style.STROKE);
-				paint.setStrokeWidth(density);
 				width = canvas.getWidth();
 				height = canvas.getHeight();
 				valueSize = (int)(width / density);
-				values = new float[valueSize * dimension];
-				points = new float[valueSize * dimension];
 				Log.i("draw", String.format("canvas width = %d, height = %d", width, height));
 				if(canvas.isHardwareAccelerated())
 					Log.i("draw", "hardware accelerated");
+				onDimensionChange();
 				initialized = true;
 			}
 			if(valueLength > 0) {
 				float start = (valueSize - valueLength) * density;
-				Path path = new Path();
-				path.moveTo(start, points[startPos * dimension]);
-				for(int i=1; i<valueLength; i++)
-					path.lineTo(start + density * i, points[((startPos + i) % valueSize) * dimension]);
+				Path[] paths = new Path[dimension];
+				for(int d=0; d<dimension; d++) {
+					Path path = new Path();
+					path.moveTo(start, points[startPos * dimension + d]);
+					for (int i = 1; i < valueLength; i++)
+						path.lineTo(start + density * i, points[((startPos + i) % valueSize) * dimension + d]);
+					paths[d] = path;
+				}
 				canvas.drawColor(bgColor);
-				canvas.drawPath(path, paint);
+				for(int d=0; d<dimension; d++)
+					canvas.drawPath(paths[d], paints[d]);
 			}
 		}
 	}
-	
+
+	public void setDimension(int newDimension) {
+		if(newDimension != dimension) {
+			dimension = newDimension;
+			onDimensionChange();
+		}
+	}
+
+	protected void onDimensionChange() {
+		int[] colors = new int[dimension];
+		paints = new Paint[dimension];
+		for(int i=0; i<dimension; i++) {
+			if(dimension == 1)
+				colors[i] = Color.WHITE;
+			else
+				colors[i] = Color.HSVToColor(new float[]{360f/dimension*i, 1, 1});
+			Paint paint = new Paint();
+			paint.setColor(colors[i]);
+			paint.setStyle(Style.STROKE);
+			paint.setStrokeWidth(density);
+			paints[i] = paint;
+		}
+		values = new float[valueSize * dimension];
+		points = new float[valueSize * dimension];
+		clearValues();
+	}
+
 	public void startDrawing() {
 		setLayerType(View.LAYER_TYPE_HARDWARE, null);
 		customDraw = true;
