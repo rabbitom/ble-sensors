@@ -229,8 +229,12 @@ public class IoTSensorActivity extends AppCompatActivity
                         vh.updateValue(sensorFeature);
                     }
                 }
-                if((curFeatureIndex == position) && (waveformView != null))
+                if((curFeatureIndex == position) && (waveformView != null)) {
                     waveformView.addValues(sensorFeature.getValues(), 1);
+                    featureWaveform.curValue.setText(sensorFeature.getValueString());
+                    featureWaveform.maxValue.setText(getString(R.string.max, sensorFeature.getValueString(waveformView.getMaxValue())));
+                    featureWaveform.minValue.setText(getString(R.string.min, sensorFeature.getValueString(waveformView.getMinValue())));
+                }
             }
                 break;
         }

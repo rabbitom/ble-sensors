@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="firmware_version">Firmware version: %s</string>
+    <string name="firmware_version">Firmware: %s</string>
     <string name="all_sensor">All Sensor</string>
     <string name="hide">Hide</string>
+    <string name="max">MAX: %s</string>
+    <string name="min">MIN: %s</string>
 </resources>

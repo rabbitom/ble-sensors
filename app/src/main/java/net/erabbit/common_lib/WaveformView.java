@@ -30,6 +30,14 @@ public class WaveformView extends View {
 	protected int valueLength;//实际保存的采样点个数
 	protected float minValue, maxValue;
 	protected boolean fixedRange = false;
+
+	public float getMinValue() {
+		return minValue;
+	}
+
+	public float getMaxValue() {
+		return maxValue;
+	}
 	
 	public WaveformView(Context context, AttributeSet set) {
 		super(context, set);

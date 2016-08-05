@@ -19,7 +19,8 @@ import net.erabbit.common_lib.WaveformView;
 public class WaveformFragment extends Fragment implements View.OnClickListener {
 
     protected WaveformView waveformView;
-    protected TextView title;
+    protected TextView title, maxValue, minValue, curValue;
+    protected TextView[] texts;
     protected Button hide;
 
     int defaultBackgroundColor;
@@ -43,6 +44,10 @@ public class WaveformFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
         waveformView = (WaveformView) view.findViewById(R.id.waveform);
         title = (TextView) view.findViewById(R.id.title);
+        curValue = (TextView) view.findViewById(R.id.curValue);
+        maxValue = (TextView) view.findViewById(R.id.maxValue);
+        minValue = (TextView) view.findViewById(R.id.minValue);
+        texts = new TextView[]{title, maxValue, minValue, curValue};
         hide = (Button) view.findViewById(R.id.hide);
         hide.setOnClickListener(this);
         defaultBackgroundColor = getResources().getColor(R.color.colorPrimary);
@@ -66,15 +71,22 @@ public class WaveformFragment extends Fragment implements View.OnClickListener {
         if(dimension > 1) {
             view.setBackgroundColor(Color.WHITE);
             waveformView.setBackgroundColor(Color.WHITE);
-            title.setTextColor(defaultBackgroundColor);
+            setTextColor(defaultBackgroundColor);
         }
         else {
             view.setBackgroundColor(defaultBackgroundColor);
             waveformView.setBackgroundColor(defaultBackgroundColor);
-            title.setTextColor(Color.WHITE);
+            setTextColor(Color.WHITE);
         }
         waveformView.clearValues();
         waveformView.setValueRange(new float[]{0,0});
+    }
+
+    protected void setTextColor(int color) {
+        for (TextView textView :
+             texts) {
+            textView.setTextColor(color);
+        }
     }
 
     public void hide() {

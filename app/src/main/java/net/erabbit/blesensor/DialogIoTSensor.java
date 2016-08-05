@@ -15,17 +15,20 @@ import java.util.UUID;
 public class DialogIoTSensor extends BleDevice {
 
     public enum SensorFeature {
-        ACCELEROMETER(  "2ea78970-7d44-44bb-b097-26183f402401", 0, 3),
-        GYROSCOPE(      "2ea78970-7d44-44bb-b097-26183f402402", 1, 3),
-        MAGNETOMETER(   "2ea78970-7d44-44bb-b097-26183f402403", 2, 3),
-        BAROMETER(      "2ea78970-7d44-44bb-b097-26183f402404", 3, 1),//Pressure
-        HUMIDITY(       "2ea78970-7d44-44bb-b097-26183f402405", 5, 1),
-        TEMPERATURE(    "2ea78970-7d44-44bb-b097-26183f402406", 4, 1),
-        SFL(            "2ea78970-7d44-44bb-b097-26183f402407", 6, 3);
+        ACCELEROMETER(  0, "2ea78970-7d44-44bb-b097-26183f402401", 3, "g", 2),
+        GYROSCOPE(      1, "2ea78970-7d44-44bb-b097-26183f402402", 3, "deg/s", 2),
+        MAGNETOMETER(   2, "2ea78970-7d44-44bb-b097-26183f402403", 3, "uT", 0),
+        BAROMETER(      3, "2ea78970-7d44-44bb-b097-26183f402404", 1, "Pa", 0),//Pressure
+        HUMIDITY(       5, "2ea78970-7d44-44bb-b097-26183f402405", 1, "%", 0),
+        TEMPERATURE(    4, "2ea78970-7d44-44bb-b097-26183f402406", 1, "°C", 2),
+        SFL(            6, "2ea78970-7d44-44bb-b097-26183f402407", 3, "", 0);
 
         private UUID uuid;
         private int keyOffset;
         private int valueCount;
+        private String unit;
+        private int precision;
+
         private float rangeMin = 0;
         private float rangeMax = 0;
 
@@ -45,10 +48,12 @@ public class DialogIoTSensor extends BleDevice {
             return new float[]{rangeMin, rangeMax};
         }
 
-        SensorFeature(String uuidString, int keyOffset, int valueCount) {
+        SensorFeature(int keyOffset, String uuidString, int valueCount, String unit, int precision) {
             this.uuid = UUID.fromString(uuidString);
             this.keyOffset = keyOffset;
             this.valueCount = valueCount;
+            this.unit = unit;
+            this.precision = precision;
         }
 
 //        public static SensorFeature findByUUID(UUID uuid) {
@@ -113,23 +118,51 @@ public class DialogIoTSensor extends BleDevice {
         public String getValueString() {
             if(!valueParsed)
                 return "no value";
-            switch(this) {
-                case ACCELEROMETER:
-                    return String.format(Locale.getDefault(), "[x,y,z] = [%.2f, %.2f, %.2f] g", values[0], values[1], values[2]);
-                case GYROSCOPE:
-                    return String.format(Locale.getDefault(), "[x,y,z] = [%.2f, %.2f, %.2f] deg/s", values[0], values[1], values[2]);
-                case MAGNETOMETER:
-                    return String.format(Locale.getDefault(), "[x,y,z] = [%d, %d, %d] uT", (int)values[0], (int)values[1], (int)values[2]);
-                case BAROMETER:
-                    return String.format(Locale.getDefault(), "%d Pa", (int)values[0]);
-                case HUMIDITY:
-                    return String.format(Locale.getDefault(), "%d %%", (int)values[0]);
-                case TEMPERATURE:
-                    return String.format(Locale.getDefault(), "%.2f °C", values[0]);
-                case SFL:
-                    return "not parsed";
+//            switch(this) {
+//                case ACCELEROMETER:
+//                    return String.format(Locale.getDefault(), "[x,y,z] = [%.2f, %.2f, %.2f] g", values[0], values[1], values[2]);
+//                case GYROSCOPE:
+//                    return String.format(Locale.getDefault(), "[x,y,z] = [%.2f, %.2f, %.2f] deg/s", values[0], values[1], values[2]);
+//                case MAGNETOMETER:
+//                    return String.format(Locale.getDefault(), "[x,y,z] = [%d, %d, %d] uT", (int)values[0], (int)values[1], (int)values[2]);
+//                case BAROMETER:
+//                    return String.format(Locale.getDefault(), "%d Pa", (int)values[0]);
+//                case HUMIDITY:
+//                    return String.format(Locale.getDefault(), "%d %%", (int)values[0]);
+//                case TEMPERATURE:
+//                    return String.format(Locale.getDefault(), "%.2f °C", values[0]);
+//                case SFL:
+//                    return "not parsed";
+//            }
+            String prefix = "";
+            String valueString = null;
+            if(valueCount == 1)
+                valueString = valueString(values[0]);
+            else {
+                if(valueCount == 3)
+                    prefix = "[x,y,z] = ";
+                valueString = "[";
+                for(int i=0; i<valueCount; i++) {
+                    if(i > 0)
+                        valueString += ", ";
+                    valueString += valueString(values[i]);
+                }
+                valueString += "]";
             }
+            if(valueString != null)
+                return prefix + valueString + " " + unit;
             return null;
+        }
+
+        public String getValueString(float value) {
+            return valueString(value) + " " + unit;
+        }
+
+        private String valueString(float value) {
+            if(precision > 0)
+                return String.format(Locale.getDefault(), "%." + String.valueOf(precision) + "f", value);
+            else
+                return String.format(Locale.getDefault(), "%d", (int)value);
         }
 
         protected boolean enabled = false;
