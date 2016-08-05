@@ -5,17 +5,23 @@
     android:layout_height="match_parent"
     android:padding="10dp">
 
-    <ListView
-        android:id="@+id/featureList"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
 
-    <fragment
-        android:id="@+id/featureWaveform"
-        android:name="net.erabbit.blesensor.WaveformFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <ListView
+            android:id="@+id/featureList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <fragment
+            android:id="@+id/featureWaveform"
+            android:name="net.erabbit.blesensor.WaveformFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

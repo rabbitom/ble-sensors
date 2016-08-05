@@ -163,8 +163,16 @@ public class IoTSensorActivity extends AppCompatActivity
 
     @Override
     public void finish() {
-        if(sensor != null)
-            sensor.disconnect();
+        if(sensor != null) {
+            if(sensor.isConnected()) {
+                if(featureWaveform.isVisible()) {
+                    featureWaveform.hide();
+                    return;
+                }
+                else
+                    sensor.disconnect();
+            }
+        }
         super.finish();
     }
 
