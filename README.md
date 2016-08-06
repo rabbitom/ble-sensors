@@ -47,38 +47,44 @@ When Byte1 = 11(Read Settings):
 ### Sensor Values(Notify)
 To receive sensor value, be sure the sensor is on -  write control command 1 to turn all sensors on,  then enable notification of each sesnor charactersitic.  
 In received notification data, value numbers start at Byte3, each number may contain 2 or 4 bytes(little endian), and the sensor value may contain multiple numbers, which is called "dimension" below:
+
 #### ACCELEROMETER
 - Characteristic UUID: 2ea78970-7d44-44bb-b097-26183f402401
 - Bytes Length: 2
 - Dimension: 3
 - Unit: g
+
 #### GYROSCOPE
 - Characteristic UUID: 2ea78970-7d44-44bb-b097-26183f402402
 - Bytes Length: 2
 - Dimension: 3
 - Unit:  deg/s
+
 #### MAGNETOMETER
 - Characteristic UUID: 2ea78970-7d44-44bb-b097-26183f402403
 - Bytes Length: 2
 - Dimension: 3
 - Unit: uT
+
 #### BAROMETER
 - Characteristic UUID: 2ea78970-7d44-44bb-b097-26183f402404
 - Bytes length: 4
 - Dimension: 1
 - Unit: Pa
+
 #### HUMIDITY
 - Characteristic UUID: 2ea78970-7d44-44bb-b097-26183f402405
 - Bytes length: 4
 - Dimension: 1
 - Unit: %
+
 #### TEMPERATURE
 - Characteristic UUID: 2ea78970-7d44-44bb-b097-26183f402406
 - Bytes length: 4
 - Dimension: 1
 - Unit: °C
+
 #### SFL (Sensor Fusion)
 - Characteristic UUID: 2ea78970-7d44-44bb-b097-26183f402407
 - Bytes length: 2
 - Dimension: 4
-
