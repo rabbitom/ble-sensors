@@ -81,6 +81,10 @@ public class IoTSensorActivity extends AppCompatActivity
             featureWaveform.show(feature.name(), feature.getDimension());
             if(waveformView == null)
                 waveformView = featureWaveform.getWaveformView();
+            if(feature == DialogIoTSensor.SensorFeature.MAGNETOMETER)
+                waveformView.setGrids(0, 0);
+            else
+                waveformView.clearGrids();
         }
 
         @Override

@@ -25,6 +25,8 @@ public class WaveformView extends View {
 	protected int dimension = 1;
 	protected float[] values;
 	protected float[] points;
+	protected float[] grids;
+	protected Paint gridPaint;
 	protected int startPos;//第一个采样点的位置
 	protected int valueSize;//缓存采样点个数
 	protected int valueLength;//实际保存的采样点个数
@@ -71,6 +73,21 @@ public class WaveformView extends View {
 					paths[d] = path;
 				}
 				canvas.drawColor(bgColor);
+				if(grids != null) {
+					if(gridPaint == null) {
+						gridPaint = new Paint();
+						gridPaint.setColor(Color.GRAY);
+						gridPaint.setStyle(Style.STROKE);
+						gridPaint.setStrokeWidth(density);
+					}
+					for (float grid :
+						 grids) {
+						if((grid > minValue) && (grid < maxValue)) {
+							float gridPoint = makePoint(grid, minValue, maxValue);
+							canvas.drawLine(0, gridPoint, width, gridPoint, gridPaint);
+						}
+					}
+				}
 				for(int d=0; d<dimension; d++)
 					canvas.drawPath(paths[d], paints[d]);
 			}
@@ -170,4 +187,33 @@ public class WaveformView extends View {
 			points[i] = makePoint(values[i], minValue, maxValue);
 		invalidate();
 	}
+
+	public void setGrids(float baseValue, float step) {
+		if((maxValue > minValue) && (step > 0)) {
+			if((maxValue > baseValue) && (minValue < baseValue)) {
+				int aboveCount = (int)((maxValue - baseValue) / step);
+				int belowCount = (int)((baseValue - minValue) / step);
+				int gridCount = 1;
+				if(aboveCount > 0)
+					gridCount += aboveCount;
+				if(belowCount > 0)
+					gridCount += belowCount;
+				grids = new float[gridCount];
+				int g = 0;
+				grids[g++] = baseValue;
+				for(int i=1; i<=aboveCount; i++)
+					grids[g++] = baseValue + step * i;
+				for(int i=1; i<=belowCount; i++)
+					grids[g++] = baseValue - step * i;
+			}
+		}
+		else {
+			grids = new float[]{ baseValue };
+		}
+	}
+
+	public void clearGrids() {
+		grids = null;
+	}
+
 }
