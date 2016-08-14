@@ -67,7 +67,9 @@ public class DialogIoTSensor extends BleDevice {
 
         private boolean valueParsed = false;
 
-        private float[] values = new float[4];
+        static final int maxValueDimension = 4;
+
+        private float[] values = new float[maxValueDimension];
 
         public float[] getValues() {
             return values;
@@ -119,6 +121,14 @@ public class DialogIoTSensor extends BleDevice {
                 default:
                     return false;
             }
+            if(calibrating) {
+                for(int i=0; i<dimension; i++) {
+                    if(values[i] < minValues[i])
+                        minValues[i] = values[i];
+                    if(values[i] > maxValues[i])
+                        maxValues[i] = values[i];
+                }
+            }
             valueParsed = true;
             return true;
         }
@@ -161,6 +171,30 @@ public class DialogIoTSensor extends BleDevice {
 
         public boolean isEnabled() {
             return enabled;
+        }
+
+        float minValues[] = new float[maxValueDimension];
+        float maxValues[] = new float[maxValueDimension];
+
+        boolean calibrating = false;
+
+        public void startCalibration() {
+            calibrating = true;
+            System.arraycopy(values, 0, minValues, 0, dimension);
+            System.arraycopy(values, 0, maxValues, 0, dimension);
+        }
+
+        public void stopCalibration() {
+            calibrating = false;
+        }
+
+        public float[] getCalibratedValues() {
+            float calibratedValues[] = new float[dimension];
+            for(int i=0; i<dimension; i++) {
+                float calibratedValue = (values[i] - minValues[i]) / (maxValues[i] - minValues[i]);
+                calibratedValues[i] = Math.min(Math.max(calibratedValue, 0f), 1f);
+            }
+            return calibratedValues;
         }
     }
 

@@ -22,6 +22,9 @@ import android.widget.Toast;
 import net.erabbit.bluetooth.BleDeviceMsgHandler;
 import net.erabbit.common_lib.WaveformView;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * Created by Tom on 16/7/21.
  */
@@ -267,10 +270,39 @@ public class IoTSensorActivity extends AppCompatActivity
             return new CharSequence[]{getString(R.string.frequency)};
     }
 
-    public void onFeatureSettings(DialogIoTSensor.SensorFeature feature, int index) {
+    Timer calibrationTimer;
+    static final int calibrationTimeout = 10000;
+    static final int calibrationInterval = 200;
+    ProgressDialog calibrationDialog = new ProgressDialog(this);
+
+    public void onFeatureSettings(final DialogIoTSensor.SensorFeature feature, int index) {
         if(index == 0)
             Log.d("on feature settings", "frequency");
-        else
-            Log.d("on feature settings", "calibration");
+        else {
+            if((feature == DialogIoTSensor.SensorFeature.MAGNETOMETER) && (index == 1)) {
+                calibrationDialog.setIndeterminate(false);
+                calibrationDialog.setMax(calibrationTimeout);
+                calibrationDialog.setTitle(R.string.calibration);
+                calibrationDialog.setMessage(getString(R.string.calibration_instruction));
+                calibrationTimer = new Timer();
+                calibrationTimer.schedule(new TimerTask() {
+                    int timeSpan = 0;
+                    @Override
+                    public void run() {
+                        timeSpan += calibrationInterval;
+                        calibrationDialog.setProgress(timeSpan);
+                        if(timeSpan > calibrationTimeout) {
+                            calibrationTimer.cancel();
+                            calibrationDialog.dismiss();
+                            feature.stopCalibration();
+                            Log.d("on feature settings", "stop calibration");
+                        }
+                    }
+                }, 0, calibrationInterval);
+                calibrationDialog.show();
+                feature.startCalibration();
+                Log.d("on feature settings", "start calibration");
+            }
+        }
     }
 }
