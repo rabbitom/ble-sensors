@@ -2,9 +2,11 @@ package net.erabbit.blesensor;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +19,15 @@ import net.erabbit.common_lib.WaveformView;
 /**
  * Created by Tom on 16/8/3.
  */
-public class FeatureFragment extends Fragment implements View.OnClickListener {
+public class FeatureFragment extends Fragment implements View.OnClickListener, DialogInterface.OnClickListener {
 
     protected WaveformView waveformView;
     protected TextView title, maxValue, minValue, curValue;
     protected TextView[] texts;
     protected Switch featureSwitch;
-    protected Button hide;
+    protected Button settings, hide;
+
+    protected DialogIoTSensor.SensorFeature sensorFeature;
 
     int defaultBackgroundColor;
 
@@ -51,6 +55,8 @@ public class FeatureFragment extends Fragment implements View.OnClickListener {
         minValue = (TextView) view.findViewById(R.id.minValue);
         texts = new TextView[]{title, maxValue, minValue, curValue};
         featureSwitch = (Switch) view.findViewById(R.id.featureSwitch);
+        settings = (Button) view.findViewById(R.id.settings);
+        settings.setOnClickListener(this);
         hide = (Button) view.findViewById(R.id.hide);
         hide.setOnClickListener(this);
         defaultBackgroundColor = getResources().getColor(R.color.colorPrimary);
@@ -61,6 +67,17 @@ public class FeatureFragment extends Fragment implements View.OnClickListener {
         if(v == hide) {
             hide();
         }
+        else if(v == settings) {
+            IoTSensorActivity activity = (IoTSensorActivity)getActivity();
+            CharSequence[] choices = activity.getFeatureSettings(sensorFeature);
+            new AlertDialog.Builder(activity).setItems(choices, this).show();
+        }
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        IoTSensorActivity activity = (IoTSensorActivity)getActivity();
+        activity.onFeatureSettings(sensorFeature, which);
     }
 
     public void show(DialogIoTSensor.SensorFeature feature) {
@@ -91,6 +108,7 @@ public class FeatureFragment extends Fragment implements View.OnClickListener {
         }
         else
             featureSwitch.setVisibility(View.GONE);
+        sensorFeature = feature;
     }
 
     protected void setTextColor(int color) {

@@ -57,4 +57,13 @@
         android:layout_alignParentEnd="true"
         android:text="@string/hide"
         android:textColor="@color/colorAccent"/>
+
+    <Button
+        android:id="@+id/settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:text="@string/settings"
+        android:textColor="@color/colorAccent"/>
 </RelativeLayout>

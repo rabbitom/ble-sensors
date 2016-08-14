@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.app.AlertDialog;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -257,5 +258,19 @@ public class IoTSensorActivity extends AppCompatActivity
             if(vh != null)
                 vh.updateStatus(sensorFeature);
         }
+    }
+
+    public CharSequence[] getFeatureSettings(DialogIoTSensor.SensorFeature feature) {
+        if(feature == DialogIoTSensor.SensorFeature.MAGNETOMETER)
+            return new CharSequence[]{getString(R.string.frequency), getString(R.string.calibration)};
+        else
+            return new CharSequence[]{getString(R.string.frequency)};
+    }
+
+    public void onFeatureSettings(DialogIoTSensor.SensorFeature feature, int index) {
+        if(index == 0)
+            Log.d("on feature settings", "frequency");
+        else
+            Log.d("on feature settings", "calibration");
     }
 }
