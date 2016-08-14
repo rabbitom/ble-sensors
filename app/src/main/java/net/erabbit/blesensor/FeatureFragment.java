@@ -31,8 +31,8 @@ public class FeatureFragment extends Fragment implements View.OnClickListener {
         return waveformView;
     }
 
-    public TextView getTitle() {
-        return title;
+    public Switch getFeatureSwitch() {
+        return featureSwitch;
     }
 
     @Nullable

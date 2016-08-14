@@ -41,12 +41,16 @@ public class IoTSensorActivity extends AppCompatActivity
         public void reset(DialogIoTSensor.SensorFeature feature) {
             featureName.setText(feature.name());
             featureSwitch.setTag(feature);
-            featureSwitch.setChecked(feature.isEnabled());
+            updateStatus(feature);
             updateValue(feature);
         }
 
         public void updateValue(DialogIoTSensor.SensorFeature feature) {
             featureValue.setText(feature.getValueString());
+        }
+
+        public void updateStatus(DialogIoTSensor.SensorFeature feature) {
+            featureSwitch.setChecked(feature.isEnabled());
         }
     }
 
@@ -78,6 +82,7 @@ public class IoTSensorActivity extends AppCompatActivity
                 waveformView.setGrids(0, 0);
             else
                 waveformView.clearGrids();
+            featureFragment.getFeatureSwitch().setChecked(feature.isEnabled() && allSensorSwitch.isChecked());
         }
 
         @Override
@@ -215,15 +220,9 @@ public class IoTSensorActivity extends AppCompatActivity
             case DialogIoTSensor.VALUE_OF_SENSOR_FEATURE: {
                 int position = valueParam;
                 DialogIoTSensor.SensorFeature sensorFeature = sensor.getFeature(position);
-                int firstVisiblePosition = featureList.getFirstVisiblePosition();
-                int lastVisiblePosition = featureList.getLastVisiblePosition();
-                if ((position >= firstVisiblePosition) && (position <= lastVisiblePosition)) {
-                    View view = featureList.getChildAt(position - firstVisiblePosition);
-                    if (view.getTag() instanceof FeatureViewHolder) {
-                        FeatureViewHolder vh = (FeatureViewHolder) view.getTag();
-                        vh.updateValue(sensorFeature);
-                    }
-                }
+                FeatureViewHolder vh = getFeatureViewHolder(position);
+                if(vh != null)
+                    vh.updateValue(sensorFeature);
                 if((curFeatureIndex == position) && (waveformView != null)) {
                     waveformView.addValues(sensorFeature.getValues(), 1);
                     featureFragment.curValue.setText(sensorFeature.getValueString());
@@ -235,13 +234,28 @@ public class IoTSensorActivity extends AppCompatActivity
         }
     }
 
+    protected FeatureViewHolder getFeatureViewHolder(int position) {
+        int firstVisiblePosition = featureList.getFirstVisiblePosition();
+        int lastVisiblePosition = featureList.getLastVisiblePosition();
+        if ((position >= firstVisiblePosition) && (position <= lastVisiblePosition)) {
+            View view = featureList.getChildAt(position - firstVisiblePosition);
+            if (view.getTag() instanceof FeatureViewHolder)
+                return (FeatureViewHolder) view.getTag();
+        }
+        return null;
+    }
+
     @Override
     public void onClick(View v) {
         if(v == allSensorSwitch) {
             sensor.switchSensor(allSensorSwitch.isChecked());
         }
         else if(v.getId() == R.id.featureSwitch) {
-            sensor.switchSensorFeature((DialogIoTSensor.SensorFeature)v.getTag(), ((Switch)v).isChecked());
+            DialogIoTSensor.SensorFeature sensorFeature = (DialogIoTSensor.SensorFeature)v.getTag();
+            sensor.switchSensorFeature(sensorFeature, ((Switch)v).isChecked());
+            FeatureViewHolder vh = getFeatureViewHolder(sensor.features.indexOf(sensorFeature));
+            if(vh != null)
+                vh.updateStatus(sensorFeature);
         }
     }
 }
