@@ -78,9 +78,9 @@ public class IoTSensorActivity extends AppCompatActivity
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             curFeatureIndex = position;
             DialogIoTSensor.SensorFeature feature = (DialogIoTSensor.SensorFeature) getItem(position);
-            featureWaveform.show(feature.name(), feature.getDimension());
+            featureFragment.show(feature.name(), feature.getDimension());
             if(waveformView == null)
-                waveformView = featureWaveform.getWaveformView();
+                waveformView = featureFragment.getWaveformView();
             if(feature == DialogIoTSensor.SensorFeature.MAGNETOMETER)
                 waveformView.setGrids(0, 0);
             else
@@ -115,7 +115,7 @@ public class IoTSensorActivity extends AppCompatActivity
     protected int curFeatureIndex= -1;
 
     protected Switch allSensorSwitch;
-    protected WaveformFragment featureWaveform;
+    protected FeatureFragment featureFragment;
     protected WaveformView waveformView;
 
     protected AlertDialog progressDlg;
@@ -158,16 +158,16 @@ public class IoTSensorActivity extends AppCompatActivity
             sensor.connect(this, deviceHandler);
         }
         FragmentManager fragmentManager = getFragmentManager();
-        featureWaveform = (WaveformFragment)fragmentManager.findFragmentById(R.id.featureWaveform);
-        featureWaveform.hide();
+        featureFragment = (FeatureFragment)fragmentManager.findFragmentById(R.id.featureDetail);
+        featureFragment.hide();
     }
 
     @Override
     public void finish() {
         if(sensor != null) {
             if(sensor.isConnected()) {
-                if(featureWaveform.isVisible()) {
-                    featureWaveform.hide();
+                if(featureFragment.isVisible()) {
+                    featureFragment.hide();
                     return;
                 }
                 else
@@ -233,9 +233,9 @@ public class IoTSensorActivity extends AppCompatActivity
                 }
                 if((curFeatureIndex == position) && (waveformView != null)) {
                     waveformView.addValues(sensorFeature.getValues(), 1);
-                    featureWaveform.curValue.setText(sensorFeature.getValueString());
-                    featureWaveform.maxValue.setText(getString(R.string.max, sensorFeature.getValueString(waveformView.getMaxValue())));
-                    featureWaveform.minValue.setText(getString(R.string.min, sensorFeature.getValueString(waveformView.getMinValue())));
+                    featureFragment.curValue.setText(sensorFeature.getValueString());
+                    featureFragment.maxValue.setText(getString(R.string.max, sensorFeature.getValueString(waveformView.getMaxValue())));
+                    featureFragment.minValue.setText(getString(R.string.min, sensorFeature.getValueString(waveformView.getMinValue())));
                 }
             }
                 break;

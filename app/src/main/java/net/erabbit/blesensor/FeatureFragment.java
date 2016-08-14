@@ -16,7 +16,7 @@ import net.erabbit.common_lib.WaveformView;
 /**
  * Created by Tom on 16/8/3.
  */
-public class WaveformFragment extends Fragment implements View.OnClickListener {
+public class FeatureFragment extends Fragment implements View.OnClickListener {
 
     protected WaveformView waveformView;
     protected TextView title, maxValue, minValue, curValue;
