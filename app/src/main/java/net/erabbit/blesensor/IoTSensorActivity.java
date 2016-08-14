@@ -67,18 +67,11 @@ public class IoTSensorActivity extends AppCompatActivity
             return 0;
         }
 
-        View.OnClickListener featureSwitchListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sensor.switchSensorFeature((DialogIoTSensor.SensorFeature)v.getTag(), ((Switch)v).isChecked());
-            }
-        };
-
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             curFeatureIndex = position;
             DialogIoTSensor.SensorFeature feature = (DialogIoTSensor.SensorFeature) getItem(position);
-            featureFragment.show(feature.name(), feature.getDimension());
+            featureFragment.show(feature);
             if(waveformView == null)
                 waveformView = featureFragment.getWaveformView();
             if(feature == DialogIoTSensor.SensorFeature.MAGNETOMETER)
@@ -94,7 +87,7 @@ public class IoTSensorActivity extends AppCompatActivity
             if (cell == null) {
                 cell = getLayoutInflater().inflate(R.layout.iot_sensor_feature_item, parent, false);
                 Switch featureSwitch = (Switch) cell.findViewById(R.id.featureSwitch);
-                featureSwitch.setOnClickListener(featureSwitchListener);
+                featureSwitch.setOnClickListener(IoTSensorActivity.this);
                 holder = new FeatureViewHolder(cell);
                 cell.setTag(holder);
             }
@@ -246,6 +239,9 @@ public class IoTSensorActivity extends AppCompatActivity
     public void onClick(View v) {
         if(v == allSensorSwitch) {
             sensor.switchSensor(allSensorSwitch.isChecked());
+        }
+        else if(v.getId() == R.id.featureSwitch) {
+            sensor.switchSensorFeature((DialogIoTSensor.SensorFeature)v.getTag(), ((Switch)v).isChecked());
         }
     }
 }
