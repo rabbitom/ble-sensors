@@ -66,6 +66,8 @@ public class FeatureFragment extends Fragment implements View.OnClickListener, D
     public void onClick(View v) {
         if(v == hide) {
             hide();
+            IoTSensorActivity activity = (IoTSensorActivity)getActivity();
+            activity.curFeatureIndex = -1;
         }
         else if(v == settings) {
             IoTSensorActivity activity = (IoTSensorActivity)getActivity();

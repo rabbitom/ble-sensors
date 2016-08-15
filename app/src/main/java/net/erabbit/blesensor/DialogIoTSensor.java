@@ -1,13 +1,13 @@
 package net.erabbit.blesensor;
 
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.util.Log;
 
 import net.erabbit.bluetooth.BleDevice;
 import net.erabbit.common_lib.CoolUtility;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -175,6 +175,35 @@ public class DialogIoTSensor extends BleDevice {
             return enabled;
         }
 
+        protected ArrayList<SensorValueRate> rates;
+
+        protected SensorValueRate rate;
+
+        public ArrayList<SensorValueRate> getRates() {
+            if(rates == null) {
+                rates = new ArrayList<>();
+                switch(this) {
+                    case ACCELEROMETER:
+                        rates.addAll(Arrays.asList(InertialRate.values()));
+                        break;
+                    case GYROSCOPE:
+                        rates.addAll(Arrays.asList(InertialRate._25, InertialRate._50, InertialRate._100));
+                        break;
+                    case MAGNETOMETER:
+                        return null;
+                    case BAROMETER:
+                    case HUMIDITY:
+                    case TEMPERATURE:
+                        rates.addAll(Arrays.asList(EnvironmentalRate.values()));
+                        break;
+                    case SFL:
+                        rates.addAll(Arrays.asList(SensorFusionRate.values()));
+                        break;
+                }
+            }
+            return rates;
+        }
+
         float minValues[] = new float[maxValueDimension];
         float maxValues[] = new float[maxValueDimension];
 
@@ -200,6 +229,11 @@ public class DialogIoTSensor extends BleDevice {
             }
             return calibratedValues;
         }
+    }
+
+    public interface SensorValueRate {
+        float getRate();
+        String getValueString();
     }
 
     protected static final UUID UUID_INFO = UUID.fromString("2ea78970-7d44-44bb-b097-26183f402408"); // Read Device Features
@@ -230,7 +264,7 @@ public class DialogIoTSensor extends BleDevice {
     }
 
     private enum ControlCommand {
-        ReadSettings(11), SensorOn(1), SensorOff(0);
+        WriteSettings(10), ReadSettings(11), SensorOn(1), SensorOff(0);
         private byte id;
         public byte getId() {
             return id;
@@ -244,10 +278,6 @@ public class DialogIoTSensor extends BleDevice {
         ControlCommand(int commandId) {
             this.id = (byte)commandId;
         }
-    }
-
-    private void readSettings() {
-        sendData(new byte[]{ControlCommand.ReadSettings.getId(), 0});
     }
 
     @Override
@@ -309,6 +339,82 @@ public class DialogIoTSensor extends BleDevice {
         }
     }
 
+    private enum InertialRate implements SensorValueRate {
+        _0_78(1, "0.78"),
+        _1_56(2, "1.56"),
+        _3_12(3, "3.12"),
+        _6_25(4, "6.25"),
+        _12_5(5, "12.5"),
+        _25(6, "25"),
+        _50(7, "50"),
+        _100(8, "100");
+        private int key;
+        private String value;
+        public float getRate() {
+            return 100 * (float)Math.pow(2, key - 8);
+        }
+        public String getValueString() {
+            return value + " Hz";
+        }
+        InertialRate(int key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+        public static InertialRate findByKey(int key) {
+            for(InertialRate rate : InertialRate.values())
+                if(rate.key == key)
+                    return rate;
+            return null;
+        }
+    }
+
+    private enum EnvironmentalRate implements SensorValueRate {
+        _0_5(1, "0.5"),
+        _1(2, "1"),
+        _2(4, "2");
+        private int key;
+        private String value;
+        public float getRate() {
+            return key / 2f;
+        }
+        public String getValueString() {
+            return value + " Hz";
+        }
+        EnvironmentalRate(int key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+        public static EnvironmentalRate findByKey(int key) {
+            for(EnvironmentalRate rate : EnvironmentalRate.values())
+                if(rate.key == key)
+                    return rate;
+            return null;
+        }
+    }
+
+    private enum SensorFusionRate implements SensorValueRate {
+        _10(10),
+        _15(15),
+        _20(20),
+        _25(25);
+        private int key;
+        public float getRate() {
+            return (float)key;
+        }
+        public String getValueString() {
+            return String.format(Locale.getDefault(), "%d Hz", key);
+        }
+        SensorFusionRate(int key) {
+            this.key = key;
+        }
+        public static SensorFusionRate findByKey(int key) {
+            for(SensorFusionRate rate : SensorFusionRate.values())
+                if(rate.key == key)
+                    return rate;
+            return null;
+        }
+    }
+
 //    instance.configuration.BASIC = {
 //                SENSOR_COMBINATION: 		instance.enums.SENSOR_COMBINATION._all,
 //                ACCELEROMETER_RANGE: 		instance.enums.ACCELEROMETER_RANGE._2,
@@ -323,15 +429,85 @@ public class DialogIoTSensor extends BleDevice {
 //                AUTO_CALIBRATION_MODE: 		instance.enums.AUTO_CALIBRATION_MODE._basic,
 //    }
     private class Settings {
+        private byte sensorCombination;
         private AccelerometerRange accelerometerRange = AccelerometerRange._2G;
         private GyroscopeRange gyroScopeRange = GyroscopeRange._2000;
+        private InertialRate accelerometerRate;
+        private InertialRate gyroscopeRate;
+        private byte magnetometerRate;
+        private EnvironmentalRate environmentalRate;
+        private SensorFusionRate sensorFusionRate;
+        private byte sensorFusionRawDataEnable;
+        private byte calibrationMode;
+        private byte autoCalibrationMode;
         public void parse(byte[] data, int offset) {
+            sensorCombination = data[offset];
             accelerometerRange = AccelerometerRange.findByKey(data[offset+1]);
+            accelerometerRate = InertialRate.findByKey(data[offset+2]);
             gyroScopeRange = GyroscopeRange.findByKey(data[offset+3]);
+            SensorFeature.ACCELEROMETER.rate = accelerometerRate;
+            gyroscopeRate = InertialRate.findByKey(data[offset+4]);
+            SensorFeature.GYROSCOPE.rate = gyroscopeRate;
+            magnetometerRate = data[offset+5];
+            environmentalRate = EnvironmentalRate.findByKey(data[offset+6]);
+            SensorFeature.BAROMETER.rate = environmentalRate;
+            SensorFeature.HUMIDITY.rate = environmentalRate;
+            SensorFeature.TEMPERATURE.rate = environmentalRate;
+            sensorFusionRate = SensorFusionRate.findByKey(data[offset+7]);
+            SensorFeature.SFL.rate = sensorFusionRate;
+            sensorFusionRawDataEnable = data[offset+8];
+            calibrationMode = data[offset+9];
+            autoCalibrationMode = data[offset+10];
+        }
+        public void write(byte[] data, int offset) {
+            data[offset] = sensorCombination;
+            data[offset+1] = (byte)accelerometerRange.key;
+            data[offset+2] = (byte)accelerometerRate.key;
+            data[offset+3] = (byte)gyroScopeRange.key;
+            data[offset+4] = (byte)gyroscopeRate.key;
+            data[offset+5] = magnetometerRate;
+            data[offset+6] = (byte)environmentalRate.key;
+            data[offset+7] = (byte)sensorFusionRate.key;
+            data[offset+8] = sensorFusionRawDataEnable;
+            data[offset+9] = calibrationMode;
+            data[offset+10] = autoCalibrationMode;
         }
     }
 
     private Settings settings = new Settings();
+
+    public void readSettings() {
+        sendData(new byte[]{ControlCommand.ReadSettings.getId(), 0});
+    }
+
+    private void writeSettings() {
+        byte[] command = new byte[12];
+        command[0] = ControlCommand.WriteSettings.getId();
+        settings.write(command, 1);
+        sendData(command);
+    }
+
+    public void setSensorValueRate(SensorFeature feature, SensorValueRate rate) {
+        switch(feature) {
+            case ACCELEROMETER:
+                settings.accelerometerRate = (InertialRate)rate;
+                break;
+            case GYROSCOPE:
+                settings.gyroscopeRate = (InertialRate)rate;
+                break;
+            case BAROMETER:
+            case HUMIDITY:
+            case TEMPERATURE:
+                settings.environmentalRate = (EnvironmentalRate)rate;
+                break;
+            case SFL:
+                settings.sensorFusionRate = (SensorFusionRate)rate;
+                break;
+            default:
+                return;
+        }
+        writeSettings();
+    }
 
     private void addFeature(SensorFeature feature) {
         if(!features.contains(feature))
@@ -395,6 +571,10 @@ public class DialogIoTSensor extends BleDevice {
     }
 
     private boolean sensorOn = false;
+
+    public boolean isSensorOn() {
+        return sensorOn;
+    }
 
     public void switchSensorFeature(SensorFeature sensorFeature, boolean onOff) {
         if(onOff) {

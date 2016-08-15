@@ -22,7 +22,7 @@ import android.widget.Toast;
 import net.erabbit.bluetooth.BleDeviceMsgHandler;
 import net.erabbit.common_lib.WaveformView;
 
-import java.util.Locale;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -30,7 +30,7 @@ import java.util.TimerTask;
  * Created by Tom on 16/7/21.
  */
 public class IoTSensorActivity extends AppCompatActivity
-        implements BleDeviceMsgHandler.BleDeviceMsgListener, View.OnClickListener {
+        implements BleDeviceMsgHandler.BleDeviceMsgListener, View.OnClickListener, DialogInterface.OnClickListener {
 
     protected class FeatureViewHolder {
         TextView featureName;
@@ -87,7 +87,7 @@ public class IoTSensorActivity extends AppCompatActivity
                 waveformView.setGrids(0, 0);
             else
                 waveformView.clearGrids();
-            featureFragment.getFeatureSwitch().setChecked(feature.isEnabled() && allSensorSwitch.isChecked());
+            featureFragment.getFeatureSwitch().setChecked(feature.isEnabled() && sensor.isSensorOn());
         }
 
         @Override
@@ -171,6 +171,7 @@ public class IoTSensorActivity extends AppCompatActivity
             if(sensor.isConnected()) {
                 if(featureFragment.isVisible()) {
                     featureFragment.hide();
+                    curFeatureIndex = -1;
                     return;
                 }
                 else
@@ -196,6 +197,7 @@ public class IoTSensorActivity extends AppCompatActivity
         if(versionText != null)
             versionText.setText(getString(R.string.firmware_version, sensor.getFirmwareVersion()));
         featureAdapter.notifyDataSetChanged();
+        sensor.readSettings();
     }
 
     @Override
@@ -220,6 +222,10 @@ public class IoTSensorActivity extends AppCompatActivity
         switch(valueId) {
             case DialogIoTSensor.VALUE_OF_SENSOR_SWITCH: {
                 allSensorSwitch.setChecked(valueParam > 0);
+                if(curFeatureIndex >= 0) {
+                    DialogIoTSensor.SensorFeature feature = sensor.getFeature(curFeatureIndex);
+                    featureFragment.getFeatureSwitch().setChecked(feature.isEnabled() && sensor.isSensorOn());
+                }
             }
                 break;
             case DialogIoTSensor.VALUE_OF_SENSOR_FEATURE: {
@@ -266,9 +272,13 @@ public class IoTSensorActivity extends AppCompatActivity
 
     public CharSequence[] getFeatureSettings(DialogIoTSensor.SensorFeature feature) {
         if(feature == DialogIoTSensor.SensorFeature.MAGNETOMETER)
-            return new CharSequence[]{getString(R.string.frequency), getString(R.string.calibration)};
-        else
-            return new CharSequence[]{getString(R.string.frequency)};
+            return new CharSequence[]{getString(R.string.calibration)};
+        else {
+            String rateString = getString(R.string.rate);
+            if(feature.rate != null)
+                rateString += (" (" + feature.rate.getValueString() + ")");
+            return new CharSequence[]{rateString};
+        }
     }
 
     Timer calibrationTimer;
@@ -277,35 +287,70 @@ public class IoTSensorActivity extends AppCompatActivity
     ProgressDialog calibrationDialog;
 
     public void onFeatureSettings(final DialogIoTSensor.SensorFeature feature, int index) {
-        if(index == 0)
-            Log.d("on feature settings", "frequency");
-        else {
-            if((feature == DialogIoTSensor.SensorFeature.MAGNETOMETER) && (index == 1)) {
-                if(calibrationDialog == null)
-                    calibrationDialog = new ProgressDialog(this);
-                calibrationDialog.setIndeterminate(false);
-                calibrationDialog.setMax(calibrationTimeout);
-                calibrationDialog.setTitle(R.string.calibration);
-                calibrationDialog.setMessage(getString(R.string.calibration_instruction));
-                calibrationTimer = new Timer();
-                calibrationTimer.schedule(new TimerTask() {
-                    int timeSpan = 0;
-                    @Override
-                    public void run() {
-                        timeSpan += calibrationInterval;
-                        calibrationDialog.setProgress(timeSpan);
-                        if(timeSpan > calibrationTimeout) {
-                            calibrationTimer.cancel();
-                            calibrationDialog.dismiss();
-                            feature.stopCalibration();
-                            Log.d("on feature settings", "stop calibration");
+        if(index == 0) {
+            if(feature == DialogIoTSensor.SensorFeature.MAGNETOMETER) {
+                if(sensor.isSensorOn() && feature.isEnabled()) {
+                    if (calibrationDialog == null)
+                        calibrationDialog = new ProgressDialog(this);
+                    calibrationDialog.setCancelable(false);
+                    calibrationDialog.setMax(calibrationTimeout);
+                    calibrationDialog.setTitle(R.string.calibration);
+                    calibrationDialog.setMessage(getString(R.string.calibration_instruction));
+                    calibrationTimer = new Timer();
+                    calibrationTimer.schedule(new TimerTask() {
+                        int timeSpan = 0;
+
+                        @Override
+                        public void run() {
+                            timeSpan += calibrationInterval;
+                            calibrationDialog.setProgress(timeSpan);
+                            if (timeSpan > calibrationTimeout) {
+                                calibrationTimer.cancel();
+                                calibrationDialog.dismiss();
+                                feature.stopCalibration();
+                                Log.d("on feature settings", "stop calibration");
+                            }
                         }
-                    }
-                }, 0, calibrationInterval);
-                calibrationDialog.show();
-                feature.startCalibration();
-                Log.d("on feature settings", "start calibration");
+                    }, 0, calibrationInterval);
+                    calibrationDialog.show();
+                    feature.startCalibration();
+                    Log.d("on feature settings", "start calibration");
+                }
+                else
+                    new AlertDialog.Builder(this).setTitle(R.string.calibration).setMessage(R.string.calibration_condition).show();
             }
+            else {
+                Log.d("on feature settings", "rate");
+                ArrayList<DialogIoTSensor.SensorValueRate> rates = feature.getRates();
+                if(rates == null)
+                    return;
+                int curRateIndex = (feature.rate != null) ? rates.indexOf(feature.rate) : -1;
+                String[] rateStrings = new String[rates.size()];
+                int rateIndex = 0;
+                for(DialogIoTSensor.SensorValueRate rate : rates)
+                    rateStrings[rateIndex++] = rate.getValueString();
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.rate)
+                        .setSingleChoiceItems(rateStrings, curRateIndex, this)
+                        .show();
+            }
+        }
+    }
+
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        dialog.dismiss();
+        if(curFeatureIndex < 0)
+            return;
+        DialogIoTSensor.SensorFeature feature = sensor.getFeature(curFeatureIndex);
+        ArrayList<DialogIoTSensor.SensorValueRate> featureRates = feature.getRates();
+        if(featureRates != null) {
+            DialogIoTSensor.SensorValueRate rate = featureRates.get(which);
+            Log.d("set feature rate", feature.name() + " - " + rate.getValueString());
+            sensor.switchSensor(false);
+            sensor.setSensorValueRate(feature, rate);
+            sensor.readSettings();
         }
     }
 
