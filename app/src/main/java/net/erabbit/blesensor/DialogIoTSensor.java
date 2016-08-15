@@ -1,6 +1,8 @@
 package net.erabbit.blesensor;
 
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
+import android.util.Log;
 
 import net.erabbit.bluetooth.BleDevice;
 import net.erabbit.common_lib.CoolUtility;
@@ -191,6 +193,8 @@ public class DialogIoTSensor extends BleDevice {
         public float[] getCalibratedValues() {
             float calibratedValues[] = new float[dimension];
             for(int i=0; i<dimension; i++) {
+                if(maxValues[i] == minValues[i])
+                    return null;
                 float calibratedValue = (values[i] - minValues[i]) / (maxValues[i] - minValues[i]);
                 calibratedValues[i] = Math.min(Math.max(calibratedValue, 0f), 1f);
             }
@@ -405,5 +409,50 @@ public class DialogIoTSensor extends BleDevice {
 
     public void switchSensor(boolean onOff) {
         sendData(new byte[]{onOff ? ControlCommand.SensorOn.getId() : ControlCommand.SensorOff.getId()});
+    }
+
+    public double getMagnetoAngle() throws Exception {
+        float[] calibratedValues = SensorFeature.MAGNETOMETER.getCalibratedValues();
+        if(calibratedValues != null) {
+            float x = calibratedValues[0] - 0.5f;
+            float y = 0.5f - calibratedValues[1];
+            double angle;
+            if(x == 0)
+                angle = ((y > 0) ? 1 : -1) * Math.PI / 2;
+            else {
+                angle = Math.atan(y/x);
+                if(x < 0)
+                    angle += Math.PI;
+            }
+            if(angle < 0)
+                angle += Math.PI * 2;
+            return angle;
+        }
+        else
+            throw new Exception("magnetometer not calibrated");
+    }
+
+    public String getMagnetoAngleString() {
+        try {
+            double angle = getMagnetoAngle();
+            angle = angle / (Math.PI * 2) * 360;
+            return String.format(Locale.getDefault(), " %d°", (int)angle);
+        }
+        catch (Exception ex) {
+            Log.d("Dialog IoT Sensor", ex.getMessage());
+            return "";
+        }
+    }
+
+    public String getMagnetoDirectionString(String[] directions) {
+        try {
+            double angle = getMagnetoAngle();
+            int index = (int)Math.round(angle / (Math.PI / 4)) % 8;
+            return " " + directions[index];
+        }
+        catch (Exception ex) {
+            Log.d("Dialog IoT Sensor", ex.getMessage());
+            return "";
+        }
     }
 }

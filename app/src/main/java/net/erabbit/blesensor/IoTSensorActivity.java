@@ -22,6 +22,7 @@ import android.widget.Toast;
 import net.erabbit.bluetooth.BleDeviceMsgHandler;
 import net.erabbit.common_lib.WaveformView;
 
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -50,7 +51,7 @@ public class IoTSensorActivity extends AppCompatActivity
         }
 
         public void updateValue(DialogIoTSensor.SensorFeature feature) {
-            featureValue.setText(feature.getValueString());
+            featureValue.setText(getSensorFeatureValueString(feature));
         }
 
         public void updateStatus(DialogIoTSensor.SensorFeature feature) {
@@ -229,7 +230,7 @@ public class IoTSensorActivity extends AppCompatActivity
                     vh.updateValue(sensorFeature);
                 if((curFeatureIndex == position) && (waveformView != null)) {
                     waveformView.addValues(sensorFeature.getValues(), 1);
-                    featureFragment.curValue.setText(sensorFeature.getValueString());
+                    featureFragment.curValue.setText(getSensorFeatureValueString(sensorFeature));
                     featureFragment.maxValue.setText(getString(R.string.max, sensorFeature.getValueString(waveformView.getMaxValue())));
                     featureFragment.minValue.setText(getString(R.string.min, sensorFeature.getValueString(waveformView.getMinValue())));
                 }
@@ -273,13 +274,15 @@ public class IoTSensorActivity extends AppCompatActivity
     Timer calibrationTimer;
     static final int calibrationTimeout = 10000;
     static final int calibrationInterval = 200;
-    ProgressDialog calibrationDialog = new ProgressDialog(this);
+    ProgressDialog calibrationDialog;
 
     public void onFeatureSettings(final DialogIoTSensor.SensorFeature feature, int index) {
         if(index == 0)
             Log.d("on feature settings", "frequency");
         else {
             if((feature == DialogIoTSensor.SensorFeature.MAGNETOMETER) && (index == 1)) {
+                if(calibrationDialog == null)
+                    calibrationDialog = new ProgressDialog(this);
                 calibrationDialog.setIndeterminate(false);
                 calibrationDialog.setMax(calibrationTimeout);
                 calibrationDialog.setTitle(R.string.calibration);
@@ -305,4 +308,14 @@ public class IoTSensorActivity extends AppCompatActivity
             }
         }
     }
+
+    protected String getSensorFeatureValueString(DialogIoTSensor.SensorFeature feature) {
+        String featureValueString = feature.getValueString();
+        if(feature == DialogIoTSensor.SensorFeature.MAGNETOMETER) {
+            featureValueString += sensor.getMagnetoAngleString();
+            featureValueString += sensor.getMagnetoDirectionString(getResources().getStringArray(R.array.directions));
+        }
+        return featureValueString;
+    }
+
 }
