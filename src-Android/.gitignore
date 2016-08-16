@@ -1,3 +1,11 @@
+.gradle
 .idea/
-gradle/wrapper/
+.DS_Store
+*.iml
 app/*.apk
+app/build/
+build/
+gradle/wrapper/
+gradlew
+gradlew.bat
+local.properties
