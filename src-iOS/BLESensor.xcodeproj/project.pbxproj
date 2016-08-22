@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E29B3E601D6B0747002B500A /* DeviceListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E29B3E5F1D6B0747002B500A /* DeviceListViewController.m */; };
 		E2CA7EB41D62FF5E00CA3156 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E2CA7EB31D62FF5E00CA3156 /* main.m */; };
 		E2CA7EB71D62FF5E00CA3156 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E2CA7EB61D62FF5E00CA3156 /* AppDelegate.m */; };
 		E2CA7EBA1D62FF5E00CA3156 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2CA7EB91D62FF5E00CA3156 /* ViewController.m */; };
@@ -18,6 +19,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E29B3E5D1D6AE194002B500A /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		E29B3E5E1D6B0747002B500A /* DeviceListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceListViewController.h; sourceTree = "<group>"; };
+		E29B3E5F1D6B0747002B500A /* DeviceListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceListViewController.m; sourceTree = "<group>"; };
 		E2CA7EAF1D62FF5E00CA3156 /* BLESensor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BLESensor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2CA7EB31D62FF5E00CA3156 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		E2CA7EB51D62FF5E00CA3156 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -69,6 +73,8 @@
 				E2CA7EB61D62FF5E00CA3156 /* AppDelegate.m */,
 				E2CA7EB81D62FF5E00CA3156 /* ViewController.h */,
 				E2CA7EB91D62FF5E00CA3156 /* ViewController.m */,
+				E29B3E5E1D6B0747002B500A /* DeviceListViewController.h */,
+				E29B3E5F1D6B0747002B500A /* DeviceListViewController.m */,
 				E2CA7EBB1D62FF5E00CA3156 /* Main.storyboard */,
 				E2CA7EBE1D62FF5E00CA3156 /* Assets.xcassets */,
 				E2CA7EC01D62FF5E00CA3156 /* LaunchScreen.storyboard */,
@@ -82,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				E2CA7EB31D62FF5E00CA3156 /* main.m */,
+				E29B3E5D1D6AE194002B500A /* PrefixHeader.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -128,6 +135,7 @@
 				TargetAttributes = {
 					E2CA7EAE1D62FF5E00CA3156 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = D9HVCB63EH;
 					};
 				};
 			};
@@ -169,6 +177,7 @@
 			files = (
 				E2CA7EBA1D62FF5E00CA3156 /* ViewController.m in Sources */,
 				E2CA7ED51D6304CE00CA3156 /* BLEDevicesManager.m in Sources */,
+				E29B3E601D6B0747002B500A /* DeviceListViewController.m in Sources */,
 				E2CA7ED21D63040500CA3156 /* BLEDevice.m in Sources */,
 				E2CA7EB71D62FF5E00CA3156 /* AppDelegate.m in Sources */,
 				E2CA7EB41D62FF5E00CA3156 /* main.m in Sources */,
@@ -283,11 +292,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/BLESensor/PrefixHeader.pch";
 				INFOPLIST_FILE = BLESensor/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = erabbit.BLESensor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -295,11 +309,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/BLESensor/PrefixHeader.pch";
 				INFOPLIST_FILE = BLESensor/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = erabbit.BLESensor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

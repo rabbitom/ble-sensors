@@ -9,11 +9,12 @@
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
 
-@interface BLEDevice : NSObject <CBPeripheralDelegate>
+@interface BLEDevice : NSObject <CBPeripheralDelegate,CBCentralManagerDelegate>
 {
     CBService *mainService;
 }
 
+@property CBCentralManager *centralManager;
 @property CBPeripheral *peripheral;
 
 - (id)initWithPeripheral: (CBPeripheral*)peripheral;
@@ -23,6 +24,12 @@
 + (NSDictionary*) characteristics;
 
 - (void)onConnected;
-- (void)onReceiveData: (NSData*)data ofCharacteristic: (CBUUID*)uuid;
+- (void)onReceiveData: (NSData*)data forProperty: (NSString*)propertyName;
+
+- (void)connect;
+- (BOOL)isConnected;
+- (void)disconnect;
+
+- (void)writeData: (NSData*)data forProperty: (NSString*)propertyName;
 
 @end

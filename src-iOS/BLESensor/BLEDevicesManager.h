@@ -7,7 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreBluetooth/CoreBluetooth.h>
 
-@interface BLEDevicesManager : NSObject
+@interface BLEDevicesManager : NSObject <CBCentralManagerDelegate>
+
++ (instancetype)getInstance;
+
+- (void)addDeviceClass: (Class)deviceClass;
+
+- (void)searchDevices;
+- (void)stopSearching;
+//- (NSArray*)devicesOfClass: (NSString*)className sortBy: (NSString*)key max: (int)count;
 
 @end
