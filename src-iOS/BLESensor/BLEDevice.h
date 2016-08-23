@@ -9,15 +9,18 @@
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
 
-@interface BLEDevice : NSObject <CBPeripheralDelegate,CBCentralManagerDelegate>
+@interface BLEDevice : NSObject <CBPeripheralDelegate>
 {
     CBService *mainService;
 }
 
-@property CBCentralManager *centralManager;
 @property CBPeripheral *peripheral;
 
-- (id)initWithPeripheral: (CBPeripheral*)peripheral;
+@property (readonly) NSString *deviceKey;
+@property (readonly) int deviceRSSI;
+@property (readonly) NSString *deviceName;
+
+- (id)initWithPeripheral: (CBPeripheral*)peripheral advertisementData: (NSDictionary*)ad;
 
 + (CBUUID*) mainServiceUUID;
 

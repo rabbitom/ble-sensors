@@ -8,6 +8,7 @@
 
 #import "DeviceListViewController.h"
 #import "BLEDevicesManager.h"
+#import "DeviceDetailsViewController.h"
 
 #define SEARCH_DEVICES_TIME 5.0
 
@@ -62,20 +63,14 @@
     [searchAlert dismissWithClickedButtonIndex:0 animated:YES];
 }
 
-- (void)alertViewCancel:(UIAlertView *)alertView {
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if(alertView == searchAlert) {
-        NSLog(@"search alert canceled");
-        [devicesManager stopSearching];
+        if(buttonIndex == alertView.cancelButtonIndex) {
+            [devicesManager stopSearching];
+            [searchTimer invalidate];
+        }
     }
 }
-
-//
-//- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-//    if(alertView == searchAlert) {
-//        if(buttonIndex == alertView.cancelButtonIndex)
-//            [devicesManager stopSearching];
-//    }
-//}
 
 #pragma mark - notification observer
 
@@ -104,7 +99,7 @@
     NSDictionary *deviceInfo = devices[indexPath.row];
     deviceName.text = [NSString stringWithFormat:@"%@ - %@", [deviceInfo objectForKey:@"name"], [deviceInfo objectForKey:@"class"]];
     deviceDesc.text = [[deviceInfo objectForKey:@"id"] UUIDString];
-    deviceRSSI.text = [[deviceInfo objectForKey:@"rssi"] stringValue];
+    deviceRSSI.text = [NSString stringWithFormat:@"RSSI: %@", [deviceInfo objectForKey:@"rssi"]];
     
     return cell;
 }
@@ -143,14 +138,23 @@
 }
 */
 
-/*
+#pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSDictionary *deviceInfo = devices[indexPath.row];
+    [self performSegueWithIdentifier:@"ShowDeviceDetails" sender:[devicesManager findDevice: deviceInfo[@"id"]]];
+}
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+    if([segue.identifier isEqualToString:@"ShowDeviceDetails"]) {
+        DeviceDetailsViewController *vc = segue.destinationViewController;
+        vc.device = sender;
+    }
 }
-*/
 
 @end

@@ -12,11 +12,14 @@
 @interface BLEDevicesManager : NSObject <CBCentralManagerDelegate>
 
 + (instancetype)getInstance;
++ (CBCentralManager*)central;
 
 - (void)addDeviceClass: (Class)deviceClass;
 
 - (void)searchDevices;
 - (void)stopSearching;
 //- (NSArray*)devicesOfClass: (NSString*)className sortBy: (NSString*)key max: (int)count;
+
+- (id)findDevice: (NSUUID*)deviceId;
 
 @end

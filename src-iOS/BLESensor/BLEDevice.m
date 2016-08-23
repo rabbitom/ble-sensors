@@ -11,9 +11,13 @@
 
 @interface BLEDevice()
 {
+    NSMutableArray *servicesOnDiscover;
     NSMutableDictionary *characteristicsOnDiscover;
     NSMutableDictionary *propertyCharacteristics;
     BOOL fullyDiscoverd;
+    BOOL autoConnectWhenIsPowerOn;
+    NSNumber *rssi;
+    NSDictionary *advertisementData;
 }
 
 @end
@@ -21,13 +25,31 @@
 
 @implementation BLEDevice
 
-- (id)initWithPeripheral: (CBPeripheral*)peripheral {
+- (id)initWithPeripheral: (CBPeripheral*)peripheral advertisementData: (NSDictionary*)ad {
     if(self = [super init]) {
         _peripheral = peripheral;
         _peripheral.delegate = self;
+        advertisementData = ad;
         fullyDiscoverd = false;
+        autoConnectWhenIsPowerOn = false;
+        propertyCharacteristics = [NSMutableDictionary dictionary];
     }
     return self;
+}
+
+- (NSString*)deviceKey {
+    return [self.peripheral.identifier UUIDString];
+}
+
+- (int)deviceRSSI {
+    return [self.peripheral.RSSI intValue];
+}
+
+- (NSString*)deviceName {
+    NSString *deviceName = advertisementData[CBAdvertisementDataLocalNameKey];
+    if(deviceName == nil)
+        deviceName = self.peripheral.name;
+    return deviceName;
 }
 
 + (CBUUID *)mainServiceUUID {
@@ -40,6 +62,7 @@
 
 - (void)onConnected {
     if(!fullyDiscoverd) {
+        [servicesOnDiscover removeAllObjects];
         characteristicsOnDiscover = [NSMutableDictionary dictionaryWithDictionary:[self.class characteristics]];
         [_peripheral discoverServices:nil];
     }
@@ -60,10 +83,17 @@
 }
 
 - (void)connect {
-    if(self.centralManager == nil)
-        self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];//will auto connect when powered on
-    else
-        [self.centralManager connectPeripheral:self.peripheral options:nil];
+    CBCentralManager *central = [BLEDevicesManager central];
+    if(self.peripheral.state != CBPeripheralStateConnected) {
+        if(central.state == CBCentralManagerStatePoweredOn)
+            [central connectPeripheral:self.peripheral options:nil];
+        else
+            DLog(@"central not powered on");
+    }
+    else {
+        DLog(@"periperal already connected");
+        [self onConnected];
+    }
 }
 
 - (BOOL)isConnected {
@@ -71,8 +101,7 @@
 }
 
 - (void)disconnect {
-    if(self.centralManager != nil)
-        [self.centralManager cancelPeripheralConnection:self.peripheral];
+    [[BLEDevicesManager central] cancelPeripheralConnection:self.peripheral];
 }
 
 - (void)writeData: (NSData*)data forProperty: (NSString*)propertyName {
@@ -89,40 +118,16 @@
         DLog(@"property has no charactristic");
 }
 
-#pragma mark - methods for CBCentralManagerDelegate
-
-- (void)centralManagerDidUpdateState:(CBCentralManager *)central {
-    if(central.state == CBCentralManagerStatePoweredOn) {
-        [central connectPeripheral:self.peripheral options:nil];
-    }
-}
-
-- (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
-    if(peripheral == self.peripheral) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"BLEDevice.Connected" object:self];
-        [self onConnected];
-    }
-}
-
-- (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
-    if(peripheral == self.peripheral)
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"BLEDevice.Diconnected" object:self userInfo:@{@"error": (error != nil) ? error : [NSNull null]}];
-}
-
-- (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
-    if(peripheral == self.peripheral)
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"BLEDevice.FailedToConnect" object:self userInfo:@{@"error": (error != nil) ? error : [NSNull null]}];
-}
-
 #pragma mark - methods for CBPeripheralDelegate
 
 //发现了服务
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error
 {
     if(error != nil) {
-        NSLog(@"CBPeripheral discover services error: %@", error);
+        DLog(@"CBPeripheral discover services error: %@", error);
         return;
     }
+    [servicesOnDiscover addObjectsFromArray:peripheral.services];
     for(CBService *service in [peripheral services])
     {
         if([service.UUID isEqual: [self.class mainServiceUUID]])
@@ -136,26 +141,23 @@
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error
 {
     if(error != nil) {
-        DLog(@"");
-        //NSLog(@"CBPeripheral discover characteristics of service %@ error: %@", service, error);
+        DLog(@"CBPeripheral discover characteristics of service %@ error: %@", service, error);
         return;
     }
-    if((characteristicsOnDiscover == nil) || (characteristicsOnDiscover.count == 0))
-        return;
-    for(CBCharacteristic *characteristic in [service characteristics])
-    {
-        for(CBUUID *uuid in characteristicsOnDiscover.allKeys) {
-            if([uuid isEqual:characteristic.UUID]) {
-                NSString *propertyName = characteristicsOnDiscover[uuid];
-                if(propertyCharacteristics == nil)
-                    propertyCharacteristics = [NSMutableDictionary dictionary];
-                [propertyCharacteristics setObject:characteristic forKey:propertyName];
-                [characteristicsOnDiscover removeObjectForKey:uuid];
-                break;
+    [servicesOnDiscover removeObject:service];
+    if((characteristicsOnDiscover != nil) || (characteristicsOnDiscover.count > 0))
+        for(CBCharacteristic *characteristic in [service characteristics])
+        {
+            for(CBUUID *uuid in characteristicsOnDiscover.allKeys) {
+                if([uuid isEqual:characteristic.UUID]) {
+                    NSString *propertyName = characteristicsOnDiscover[uuid];
+                    [propertyCharacteristics setObject:characteristic forKey:propertyName];
+                    [characteristicsOnDiscover removeObjectForKey:uuid];
+                    break;
+                }
             }
         }
-    }
-    if(characteristicsOnDiscover.count == 0)
+    if(servicesOnDiscover.count == 0)
         [self setReady];
 }
 
@@ -163,8 +165,7 @@
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
 {
     if(error != nil) {
-        DLog(@"");
-        //NSLog(@"CBPeripheral update value of characteristic %@ error: %@", characteristic, error);
+        DLog(@"CBPeripheral update value of characteristic %@ error: %@", characteristic, error);
         return;
     }
     NSString *propertyName = [[self.class characteristics] objectForKey:characteristic.UUID];

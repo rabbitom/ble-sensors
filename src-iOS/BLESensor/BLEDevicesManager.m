@@ -8,6 +8,7 @@
 
 #import "BLEDevicesManager.h"
 #import "BLEDevice.h"
+#import "CoolUtility.h"
 
 @implementation BLEDevicesManager
 {
@@ -23,6 +24,14 @@ static id instance;
     if(instance == nil)
         instance = [[self.class alloc] init];
     return instance;
+}
+
++ (CBCentralManager*)central {
+    return [[self.class getInstance] centralManager];
+}
+
+- (CBCentralManager*)centralManager {
+    return centralManager;
 }
 
 - (id)init {
@@ -51,6 +60,10 @@ static id instance;
         [deviceClasses setObject:deviceClass forKey:mainServiceUUID];
 }
 
+- (id)findDevice: (NSUUID*)deviceId {
+    return devices[deviceId];
+}
+
 #pragma mark - CBCentralManagerDelegate
 
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central {
@@ -58,7 +71,7 @@ static id instance;
 }
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *,id> *)advertisementData RSSI:(NSNumber *)RSSI {
-    NSLog(@"found peripheral: %@ advertisement: %@ rssi: %@", peripheral.name, advertisementData, RSSI);
+    DLog(@"found peripheral: %@ advertisement: %@ rssi: %@", peripheral.name, advertisementData, RSSI);
     Class deviceClass = nil;
     NSArray *serviceUUIDs = advertisementData[CBAdvertisementDataServiceUUIDsKey];
     if(serviceUUIDs != nil) {
@@ -75,7 +88,7 @@ static id instance;
     }
     if(deviceClass == nil)
         deviceClass = [BLEDevice class];
-    id device = [[deviceClass alloc] initWithPeripheral: peripheral];
+    id device = [[deviceClass alloc] initWithPeripheral: peripheral advertisementData:advertisementData];
     if(devices == nil)
         devices = [NSMutableDictionary dictionary];
     if(devices[peripheral.identifier] == nil)
@@ -83,7 +96,31 @@ static id instance;
     NSString *deviceName = advertisementData[CBAdvertisementDataLocalNameKey];
     if(deviceName == nil)
         deviceName = peripheral.name;
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"BLEDevice.FoundDevice" object:self userInfo:@{@"id": peripheral.identifier, @"name":  (deviceName != nil) ? deviceName : [NSNull null], @"rssi": RSSI, @"class": NSStringFromClass(deviceClass)}];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"BLEDevice.FoundDevice" object:self userInfo:@{@"id": peripheral.identifier, @"name":  STRING_BY_DEFAULT(deviceName, @"<Unnamed>"), @"rssi": RSSI, @"class": NSStringFromClass(deviceClass)}];
+}
+
+- (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
+    DLog(@"connected peripheral: %@", peripheral);
+    BLEDevice *device = [self findDevice:peripheral.identifier];
+    if(device != nil) {
+        [device onConnected];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"BLEDevice.Connected" object:device];
+    }
+}
+
+- (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
+    DLog(@"disconnected peripheral: %@, error: %@", peripheral, error);
+    BLEDevice *device = [self findDevice:peripheral.identifier];
+    if(device != nil)
+        //[device onDisconnected];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"BLEDevice.Disconnected" object:device userInfo:@{@"error": (error != nil) ? error : [NSNull null]}];
+}
+
+- (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
+    DLog(@"failed to connect peripheral: %@, error: %@", peripheral, error);
+    BLEDevice *device = [self findDevice:peripheral.identifier];
+    if(device != nil)
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"BLEDevice.FailedToConnect" object:device userInfo:@{@"error": (error != nil) ? error : [NSNull null]}];
 }
 
 @end
