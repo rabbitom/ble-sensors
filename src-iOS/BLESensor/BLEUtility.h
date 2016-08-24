@@ -13,4 +13,6 @@
 
 + (NSString*)serviceName: (CBUUID*)serviceUUID;
 
++ (NSString*)centralState:(CBCentralManagerState)state;
+
 @end

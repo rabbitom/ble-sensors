@@ -50,4 +50,15 @@ static NSDictionary *serviceNames;
     return serviceNames[serviceUUID];
 }
 
++ (NSString*)centralState:(CBCentralManagerState)state {
+    switch(state) {
+        case CBCentralManagerStateUnknown: return @"Unknown";
+        case CBCentralManagerStateResetting: return @"Resetting";
+        case CBCentralManagerStateUnsupported: return @"Unsupported";
+        case CBCentralManagerStateUnauthorized: return @"Unauthorized";
+        case CBCentralManagerStatePoweredOff: return @"PoweredOff";
+        case CBCentralManagerStatePoweredOn: return @"PoweredOn";
+    }
+}
+
 @end

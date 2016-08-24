@@ -8,6 +8,7 @@
 
 #import "BLEDevicesManager.h"
 #import "BLEDevice.h"
+#import "BLEUtility.h"
 #import "CoolUtility.h"
 
 @implementation BLEDevicesManager
@@ -67,11 +68,16 @@ static id instance;
 #pragma mark - CBCentralManagerDelegate
 
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central {
-    DLog(@"CBCentralManager State: %d", central.state);
+    DLog(@"CBCentralManager State: %@", [BLEUtility centralState:central.state]);
 }
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *,id> *)advertisementData RSSI:(NSNumber *)RSSI {
-    DLog(@"found peripheral: %@ advertisement: %@ rssi: %@", peripheral.name, advertisementData, RSSI);
+    if([deviceBuffer containsObject:peripheral.identifier]) {
+        NSLog(@"found peripheral again: %@ rssi: %@\nadvertisement: %@ ", peripheral.name, RSSI, advertisementData);
+        return;
+    }
+    NSLog(@"found new peripheral: %@ rssi: %@\nadvertisement: %@ ", peripheral.name, RSSI, advertisementData);
+    [deviceBuffer addObject:peripheral.identifier];
     Class deviceClass = nil;
     NSArray *serviceUUIDs = advertisementData[CBAdvertisementDataServiceUUIDsKey];
     if(serviceUUIDs != nil) {
