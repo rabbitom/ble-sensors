@@ -14,7 +14,6 @@
     NSMutableArray *servicesOnDiscover;
     NSMutableDictionary *characteristicsOnDiscover;
     NSMutableDictionary *propertyCharacteristics;
-    BOOL fullyDiscoverd;
     BOOL autoConnectWhenIsPowerOn;
     NSNumber *rssi;
     NSDictionary *advertisementData;
@@ -30,7 +29,6 @@
         _peripheral = peripheral;
         _peripheral.delegate = self;
         advertisementData = ad;
-        fullyDiscoverd = false;
         autoConnectWhenIsPowerOn = false;
         propertyCharacteristics = [NSMutableDictionary dictionary];
     }
@@ -61,13 +59,15 @@
 }
 
 - (void)onConnected {
-    if(!fullyDiscoverd) {
+    if(self.peripheral.services == nil) {
         [servicesOnDiscover removeAllObjects];
         characteristicsOnDiscover = [NSMutableDictionary dictionaryWithDictionary:[self.class characteristics]];
-        [_peripheral discoverServices:nil];
+        [self.peripheral discoverServices:nil];
     }
-    else
+    else {
+        DLog(@"already discovered services: %@", self.peripheral.services);
         [self setReady];
+    }
 }
 
 - (void)setReady {
