@@ -14,6 +14,8 @@
 {
     BLEDevice *_devcie;
 }
+@property (weak, nonatomic) IBOutlet UISegmentedControl *segments;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @end
 
 @implementation DeviceServicesViewController
@@ -62,7 +64,10 @@
     NSString *_serviceName = [BLEUtility serviceName:service.UUID];
     serviceName.text = STRING_BY_DEFAULT(_serviceName, @"Unknown Service");
     serviceUUID.text = [service.UUID UUIDString];
-    serviceInfo.text = service.isPrimary ? @"PRIMARY" : @"";
+    serviceInfo.text = service.isPrimary ? @"PRIMARY" : @"SECONDARY";
+    
+    CGRect infoRect = serviceInfo.frame;
+    DLog(@"service info: x=%f, y=%f, w=%f, h=%f", infoRect.origin.x, infoRect.origin.y, infoRect.size.width, infoRect.size.height);
     
     return cell;
 }

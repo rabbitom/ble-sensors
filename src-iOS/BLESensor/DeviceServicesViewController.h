@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "BLEDevice.h"
 
-@interface DeviceServicesViewController : UITableViewController
+@interface DeviceServicesViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 
 @property BLEDevice *device;
 
