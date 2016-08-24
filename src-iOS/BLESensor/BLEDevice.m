@@ -12,7 +12,8 @@
 
 @interface BLEDevice()
 {
-    NSDictionary *advertisementData;
+    NSMutableDictionary *advertisementData;
+    NSMutableArray *advertisements;
 
     NSMutableArray *servicesOnDiscover;//peripheral services to discover characteristics
     NSMutableArray *characteristicUUIDsToDiscover;
@@ -29,15 +30,40 @@
     if(self = [super init]) {
         _peripheral = peripheral;
         _peripheral.delegate = self;
-        advertisementData = ad;
+        advertisementData = [NSMutableDictionary dictionaryWithDictionary:ad];
+        [self parseAdvertisementData];
         propertyCharacteristics = [NSMutableDictionary dictionary];
         servicesOnDiscover = [NSMutableArray array];
     }
     return self;
 }
 
+- (NSArray*)advertisements {
+    return advertisements;
+}
+
+- (void)parseAdvertisementData {
+    if(advertisements == nil)
+        advertisements = [NSMutableArray array];
+    else
+        [advertisements removeAllObjects];
+    for(NSString *key in advertisementData.allKeys) {
+        NSObject *value = advertisementData[key];
+        NSLog(@"advertisement key = %@, value class is %@", key, NSStringFromClass(value.class));
+        NSString *k = [key hasPrefix:@"kCBAdvData"] ? [key substringFromIndex:10] : key;
+        if([value conformsToProtocol:@protocol(NSFastEnumeration)]) {
+            for(NSObject *v in (id<NSFastEnumeration>)value)
+                [advertisements addObject:@{@"key":k, @"value":[NSString stringWithFormat:@"%@", v]}];
+        }
+        else
+            [advertisements addObject:@{@"key":k, @"value":[NSString stringWithFormat:@"%@", value]}];
+    }
+}
+
 - (void)updateAdvertisementData: (NSDictionary*)ad {
-    advertisementData = ad;
+    for(id key in ad.allKeys)
+        [advertisementData setObject:ad[key] forKey:key];
+    [self parseAdvertisementData];
 }
 
 - (NSString*)deviceKey {

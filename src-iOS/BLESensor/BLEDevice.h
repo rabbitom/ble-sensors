@@ -16,6 +16,7 @@
 + (NSDictionary*) characteristics;//CharateristicUUID(CBUUID) : propertyName(String)
 
 @property CBPeripheral *peripheral;
+@property (readonly) NSArray *advertisements;
 
 @property (readonly) NSString *deviceKey;
 @property int rssi;

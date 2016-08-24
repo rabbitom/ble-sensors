@@ -8,6 +8,7 @@
 
 #import "DeviceDetailsViewController.h"
 #import "DeviceServicesViewController.h"
+#import "DeviceAdvertisementsViewController.h"
 
 @interface DeviceDetailsViewController()
 {
@@ -32,6 +33,9 @@
         for(UIViewController *vc in self.viewControllers) {
             if(vc.class == DeviceServicesViewController.class) {
                 ((DeviceServicesViewController*)vc).device = self.device;
+            }
+            else if(vc.class == DeviceAdvertisementsViewController.class) {
+                ((DeviceAdvertisementsViewController*)vc).device = self.device;
             }
         }
     }
