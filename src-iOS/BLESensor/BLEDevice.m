@@ -8,15 +8,16 @@
 
 #import "BLEDevice.h"
 #import "BLEDevicesManager.h"
+#import "CoolUtility.h"
 
 @interface BLEDevice()
 {
-    NSMutableArray *servicesOnDiscover;
-    NSMutableDictionary *characteristicsOnDiscover;
-    NSMutableDictionary *propertyCharacteristics;
-    BOOL autoConnectWhenIsPowerOn;
-    NSNumber *rssi;
     NSDictionary *advertisementData;
+
+    NSMutableArray *servicesOnDiscover;//peripheral services to discover characteristics
+    NSMutableArray *characteristicUUIDsToDiscover;
+
+    NSMutableDictionary *propertyCharacteristics;
 }
 
 @end
@@ -29,10 +30,14 @@
         _peripheral = peripheral;
         _peripheral.delegate = self;
         advertisementData = ad;
-        autoConnectWhenIsPowerOn = false;
         propertyCharacteristics = [NSMutableDictionary dictionary];
+        servicesOnDiscover = [NSMutableArray array];
     }
     return self;
+}
+
+- (void)updateAdvertisementData: (NSDictionary*)ad {
+    advertisementData = ad;
 }
 
 - (NSString*)deviceKey {
@@ -43,11 +48,11 @@
     return [self.peripheral.RSSI intValue];
 }
 
-- (NSString*)deviceName {
+- (NSString*)deviceNameByDefault: (NSString*)defaultName {
     NSString *deviceName = advertisementData[CBAdvertisementDataLocalNameKey];
     if(deviceName == nil)
         deviceName = self.peripheral.name;
-    return deviceName;
+    return STRING_BY_DEFAULT(deviceName, defaultName);
 }
 
 + (CBUUID *)mainServiceUUID {
@@ -61,7 +66,11 @@
 - (void)onConnected {
     if(self.peripheral.services == nil) {
         [servicesOnDiscover removeAllObjects];
-        characteristicsOnDiscover = [NSMutableDictionary dictionaryWithDictionary:[self.class characteristics]];
+        NSDictionary *characteristics = [self.class characteristics];
+        if(characteristics != nil)
+            characteristicUUIDsToDiscover = [NSMutableArray arrayWithArray:characteristics.allKeys];
+        else
+            characteristicUUIDsToDiscover = nil;
         [self.peripheral discoverServices:nil];
     }
     else {
@@ -129,12 +138,8 @@
     }
     [servicesOnDiscover addObjectsFromArray:peripheral.services];
     for(CBService *service in [peripheral services])
-    {
-        if([service.UUID isEqual: [self.class mainServiceUUID]])
-            mainService = service;
         //发现特性
         [peripheral discoverCharacteristics:nil forService:service];
-    }
 }
 
 //发现了特性
@@ -145,16 +150,15 @@
         return;
     }
     [servicesOnDiscover removeObject:service];
-    if((characteristicsOnDiscover != nil) || (characteristicsOnDiscover.count > 0))
+    if((characteristicUUIDsToDiscover != nil) && (characteristicUUIDsToDiscover.count > 0))
         for(CBCharacteristic *characteristic in [service characteristics])
         {
-            for(CBUUID *uuid in characteristicsOnDiscover.allKeys) {
-                if([uuid isEqual:characteristic.UUID]) {
-                    NSString *propertyName = characteristicsOnDiscover[uuid];
-                    [propertyCharacteristics setObject:characteristic forKey:propertyName];
-                    [characteristicsOnDiscover removeObjectForKey:uuid];
-                    break;
-                }
+            CBUUID *characteristicUUID = characteristic.UUID;
+            if([characteristicUUIDsToDiscover containsObject:characteristicUUID]) {
+                NSString *propertyName = [self.class characteristics][characteristicUUID];
+                [propertyCharacteristics setObject:characteristic forKey:propertyName];
+                [characteristicUUIDsToDiscover removeObject:characteristicUUID];
+                break;
             }
         }
     if(servicesOnDiscover.count == 0)

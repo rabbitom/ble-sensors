@@ -28,8 +28,8 @@
     _devcie = device;
     if(self.device != nil) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceReady:) name:@"BLEDevice.Ready" object:self.device];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceConnectionChanged:) name:@"BLEDevice.Connected" object:self.device];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceConnectionChanged:) name:@"BLEDevice.Disconnected" object:self.device];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceConnectionStatusChanged:) name:@"BLEDevice.Connected" object:self.device];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceConnectionStatusChanged:) name:@"BLEDevice.Disconnected" object:self.device];
         if(!self.device.isConnected) {
             [self.device connect];
         }
@@ -48,7 +48,7 @@
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    self.navigationItem.title = self.device.deviceName;
+    self.navigationItem.title = [self.device deviceNameByDefault:@"Unnamed Device"];
     [self updateConnectBtn];
     DLog("");
 }
@@ -63,7 +63,7 @@
         [self.tableView reloadData];
 }
 
-- (void)onDeviceConnectionChanged: (NSNotification*)notification {
+- (void)onDeviceConnectionStatusChanged: (NSNotification*)notification {
     [self updateConnectBtn];
 }
 

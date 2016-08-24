@@ -10,28 +10,28 @@
 #import <CoreBluetooth/CoreBluetooth.h>
 
 @interface BLEDevice : NSObject <CBPeripheralDelegate>
-{
-    CBService *mainService;
-}
+
++ (CBUUID*) mainServiceUUID;
+
++ (NSDictionary*) characteristics;//CharateristicUUID(CBUUID) : propertyName(String)
 
 @property CBPeripheral *peripheral;
 
 @property (readonly) NSString *deviceKey;
-@property (readonly) int deviceRSSI;
-@property (readonly) NSString *deviceName;
+@property int rssi;
+
+- (NSString*) deviceNameByDefault: (NSString*)defaultName;
+
+@property (readonly) BOOL isConnected;
 
 - (id)initWithPeripheral: (CBPeripheral*)peripheral advertisementData: (NSDictionary*)ad;
+- (void)updateAdvertisementData: (NSDictionary*)ad;
 
-+ (CBUUID*) mainServiceUUID;
-
-+ (NSDictionary*) characteristics;
+- (void)connect;
+- (void)disconnect;
 
 - (void)onConnected;
 - (void)onReceiveData: (NSData*)data forProperty: (NSString*)propertyName;
-
-- (void)connect;
-- (BOOL)isConnected;
-- (void)disconnect;
 
 - (void)writeData: (NSData*)data forProperty: (NSString*)propertyName;
 

@@ -14,9 +14,9 @@
 @implementation BLEDevicesManager
 {
     CBCentralManager *centralManager;
-    NSMutableDictionary *deviceClasses;//mainServiceUUID:Class
-    NSMutableDictionary *devices;//uuid:BLEDevice
-    NSMutableArray *deviceBuffer;
+    NSMutableDictionary *deviceClasses;//CBUUID(mainServiceUUID):Class
+    NSMutableDictionary *devices;//NSUUID(peripheral.identifier):BLEDevice
+    NSMutableArray *deviceBuffer;//NSUUID
 }
 
 static id instance;
@@ -39,6 +39,7 @@ static id instance;
     if(self = [super init]) {
         centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil options:@{CBCentralManagerOptionShowPowerAlertKey: @YES}];
         deviceClasses = [NSMutableDictionary dictionary];
+        devices = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -73,36 +74,41 @@ static id instance;
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *,id> *)advertisementData RSSI:(NSNumber *)RSSI {
     if([deviceBuffer containsObject:peripheral.identifier]) {
-        NSLog(@"found peripheral again: %@ rssi: %@\nadvertisement: %@ ", peripheral.name, RSSI, advertisementData);
+        NSLog(@"found peripheral again: %@ rssi: %@\nadvertisement: %@ ", peripheral, RSSI, advertisementData);
+        id device = devices[peripheral.identifier];
+        if(device != nil) {
+            [(BLEDevice*)device updateAdvertisementData: advertisementData];
+            ((BLEDevice*)device).rssi = [RSSI intValue];
+        }
         return;
     }
-    NSLog(@"found new peripheral: %@ rssi: %@\nadvertisement: %@ ", peripheral.name, RSSI, advertisementData);
+    NSLog(@"found peripheral: %@ rssi: %@\nadvertisement: %@ ", peripheral, RSSI, advertisementData);
     [deviceBuffer addObject:peripheral.identifier];
     Class deviceClass = nil;
     NSArray *serviceUUIDs = advertisementData[CBAdvertisementDataServiceUUIDsKey];
     if(serviceUUIDs != nil) {
         for(CBUUID *serviceUUID in serviceUUIDs) {
-            for(CBUUID *mainServiceUUID in deviceClasses.allKeys) {
-                if(serviceUUID == mainServiceUUID) {
-                    deviceClass = deviceClasses[mainServiceUUID];
-                    break;
-                }
-            }
-            if(deviceClass != nil)
+            if([deviceClasses.allKeys containsObject:serviceUUID]) {
+                deviceClass = deviceClasses[serviceUUID];
                 break;
+            }
         }
     }
-    if(deviceClass == nil)
-        deviceClass = [BLEDevice class];
-    id device = [[deviceClass alloc] initWithPeripheral: peripheral advertisementData:advertisementData];
-    if(devices == nil)
-        devices = [NSMutableDictionary dictionary];
-    if(devices[peripheral.identifier] == nil)
+    id device = devices[peripheral.identifier];
+    if(device == nil) {
+        if(deviceClass == nil)
+            deviceClass = [BLEDevice class];
+        device = [[deviceClass alloc] initWithPeripheral: peripheral advertisementData:advertisementData];
+        ((BLEDevice*)device).rssi = [RSSI intValue];
+        NSLog(@"device created for peripheral: %@ of class: %@", peripheral, NSStringFromClass(deviceClass));
         [devices setObject:device forKey:peripheral.identifier];
-    NSString *deviceName = advertisementData[CBAdvertisementDataLocalNameKey];
-    if(deviceName == nil)
-        deviceName = peripheral.name;
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"BLEDevice.FoundDevice" object:self userInfo:@{@"id": peripheral.identifier, @"name":  STRING_BY_DEFAULT(deviceName, @"<Unnamed>"), @"rssi": RSSI, @"class": NSStringFromClass(deviceClass)}];
+    }
+    else {
+        CBPeripheral *originalPeripheral = [(BLEDevice*)device peripheral];
+        if(originalPeripheral != peripheral)
+            DLog(@"device already created with peripheral: %@, new found peripheral: %@", originalPeripheral, peripheral);
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"BLEDevice.FoundDevice" object:device];
 }
 
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {

@@ -40,6 +40,9 @@
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView userInteractionEnabled="NO" tag="4" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="link" translatesAutoresizingMaskIntoConstraints="NO" id="k0H-6P-5PB">
+                                            <rect key="frame" x="125" y="3" width="32" height="32"/>
+                                        </imageView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="NDq-2T-shq" firstAttribute="leading" secondItem="mu4-ik-BET" secondAttribute="leadingMargin" id="4lz-jh-fFU"/>
@@ -48,6 +51,8 @@
                                         <constraint firstItem="seq-kB-jxw" firstAttribute="top" secondItem="mu4-ik-BET" secondAttribute="topMargin" id="U26-iS-guz"/>
                                         <constraint firstItem="EJZ-ie-TgY" firstAttribute="top" secondItem="NDq-2T-shq" secondAttribute="bottom" constant="8" id="YFj-tl-4VD"/>
                                         <constraint firstItem="seq-kB-jxw" firstAttribute="baseline" secondItem="NDq-2T-shq" secondAttribute="baseline" id="ZMt-ws-9I5"/>
+                                        <constraint firstItem="k0H-6P-5PB" firstAttribute="leading" secondItem="NDq-2T-shq" secondAttribute="trailing" constant="8" id="bdJ-mY-iJm"/>
+                                        <constraint firstItem="k0H-6P-5PB" firstAttribute="centerY" secondItem="NDq-2T-shq" secondAttribute="centerY" id="cmR-hV-fOc"/>
                                         <constraint firstItem="seq-kB-jxw" firstAttribute="trailing" secondItem="mu4-ik-BET" secondAttribute="trailingMargin" id="ol2-Wd-1Sy"/>
                                         <constraint firstItem="seq-kB-jxw" firstAttribute="centerY" secondItem="mu4-ik-BET" secondAttribute="centerY" id="wfz-oh-tac"/>
                                     </constraints>
@@ -167,4 +172,7 @@
             <point key="canvasLocation" x="-1429" y="-215"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="link" width="32" height="32"/>
+    </resources>
 </document>
