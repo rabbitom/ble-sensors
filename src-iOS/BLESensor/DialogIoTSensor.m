@@ -10,12 +10,12 @@
 
 @implementation DialogIoTSensor
 
-static CBUUID* _mainServiceUUID;
+static NSDictionary* _services;
 
-+ (CBUUID *)mainServiceUUID {
-    if(_mainServiceUUID == nil)
-        _mainServiceUUID = [CBUUID UUIDWithString:@"2ea78970-7d44-44bb-b097-26183f402400"];
-    return _mainServiceUUID;
++ (NSDictionary *) services {
+    if(_services == nil)
+        _services = @{[CBUUID UUIDWithString:@"2ea78970-7d44-44bb-b097-26183f402400"] : @"Dialog Wearable"};
+    return _services;
 }
 
 static NSDictionary* _characteristics = nil;
@@ -30,9 +30,9 @@ static NSDictionary* _characteristics = nil;
                              [CBUUID UUIDWithString:@"2ea78970-7d44-44bb-b097-26183f402405"] : @"HUMIDITY",//notify
                              [CBUUID UUIDWithString:@"2ea78970-7d44-44bb-b097-26183f402406"] : @"TEMPERATURE",//notify
                              [CBUUID UUIDWithString:@"2ea78970-7d44-44bb-b097-26183f402407"] : @"SFL",//notify
-                             [CBUUID UUIDWithString:@"2ea78970-7d44-44bb-b097-26183f402408"] : @"info",//read
-                             [CBUUID UUIDWithString:@"2ea78970-7d44-44bb-b097-26183f402409"] : @"config",//write
-                             [CBUUID UUIDWithString:@"2ea78970-7d44-44bb-b097-26183f40240a"] : @"data",//notify
+                             [CBUUID UUIDWithString:@"2ea78970-7d44-44bb-b097-26183f402408"] : @"Device Features",//read
+                             [CBUUID UUIDWithString:@"2ea78970-7d44-44bb-b097-26183f402409"] : @"Control Point",//write
+                             [CBUUID UUIDWithString:@"2ea78970-7d44-44bb-b097-26183f40240a"] : @"Command Reply",//notify
                              };
     return _characteristics;
 }

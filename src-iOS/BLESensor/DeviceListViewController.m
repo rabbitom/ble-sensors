@@ -36,6 +36,28 @@
         devices = [NSMutableArray array];
     if(devicesManager == nil) {
         devicesManager = [BLEDevicesManager getInstance];
+        @try {
+            NSString *devicesPath = [[NSBundle mainBundle] pathForResource:@"bledevices" ofType:@"json"];
+            if(devicesPath == nil)
+                @throw [NSException exceptionWithName:@"FileNotFound" reason:@"bledevices.json file not found" userInfo:nil];
+            NSData *devicesData = [NSData dataWithContentsOfFile:devicesPath];
+            NSError *error = nil;
+            id bleDevices = [NSJSONSerialization JSONObjectWithData:devicesData options:NSJSONReadingAllowFragments error:&error];
+            if(error)
+                @throw [NSException exceptionWithName:@"JSON Error" reason:@"Cannot parse JSON" userInfo:@{@"error": error}];
+            if(![bleDevices isKindOfClass:[NSArray class]])
+                @throw [NSException exceptionWithName:@"JSON Error" reason:@"JSON object is not NSArray" userInfo:nil];
+            for(NSDictionary *deviceSpec in (NSArray*)bleDevices) {
+                NSString *className = deviceSpec[@"className"];
+                NSString *mainServiceUUIDString = deviceSpec[@"mainService"];
+                id deviceClass = NSClassFromString(className);
+                CBUUID *mainServiceUUID = [CBUUID UUIDWithString:mainServiceUUIDString];
+                [devicesManager addDeviceClass:deviceClass byMainService:mainServiceUUID];
+            }
+        }
+        @catch (NSException *exception) {
+            DLog(@"parse bledevices failed: %@", exception);
+        }
     }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFoundBLEDevice:) name:@"BLEDevice.FoundDevice" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceConnectionStatusChanged:) name:@"BLEDevice.Connected" object:nil];

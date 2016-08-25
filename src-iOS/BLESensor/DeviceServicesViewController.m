@@ -69,16 +69,21 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: showCharacteristics ? @"CharacteristicItem" : @"ServiceItem" forIndexPath:indexPath];
+    
+    UILabel *name = [cell viewWithTag:1];
+    UILabel *UUID = [cell viewWithTag:2];
+    UILabel *info = [cell viewWithTag:3];
+
     if(showCharacteristics) {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CharacteristicItem" forIndexPath:indexPath];
-        
-        UILabel *name = [cell viewWithTag:1];
-        UILabel *UUID = [cell viewWithTag:2];
-        UILabel *info = [cell viewWithTag:3];
-        
         CBService *service = self.device.peripheral.services[indexPath.section];
         CBCharacteristic *characteristic = service.characteristics[indexPath.row];
-        name.text = @"Unknown Characteristic";
+        NSString *characteristicName = nil;
+        NSDictionary *deviceDefinedCharacteristics = [self.device.class characteristics];
+        if(deviceDefinedCharacteristics != nil)
+            characteristicName = deviceDefinedCharacteristics[characteristic.UUID];
+        name.text = STRING_BY_DEFAULT(characteristicName, @"Unknown Characteristic");
         UUID.text = [characteristic.UUID UUIDString];
         CBCharacteristicProperties properties = characteristic.properties;
         NSMutableArray *propertyArray = [NSMutableArray array];
@@ -93,24 +98,17 @@
         if(properties & CBCharacteristicPropertyNotifyEncryptionRequired)[propertyArray addObject:@"NotifyEncryptionRequired"];
         if(properties & CBCharacteristicPropertyIndicateEncryptionRequired)[propertyArray addObject:@"IndicateEncryptionRequired"];
         info.text = [propertyArray componentsJoinedByString:@" | "];
-        
-        return cell;
     }
     else {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ServiceItem" forIndexPath:indexPath];
-        
-        UILabel *serviceName = [cell viewWithTag:1];
-        UILabel *serviceUUID = [cell viewWithTag:2];
-        UILabel *serviceInfo = [cell viewWithTag:3];
-        
         CBService *service = self.device.peripheral.services[indexPath.row];
-        NSString *_serviceName = [BLEUtility serviceName:service.UUID];
-        serviceName.text = STRING_BY_DEFAULT(_serviceName, @"Unknown Service");
-        serviceUUID.text = [service.UUID UUIDString];
-        serviceInfo.text = service.isPrimary ? @"PRIMARY" : @"SECONDARY";
-        
-        return cell;
+        NSString *serviceName = [BLEUtility serviceName:service.UUID];
+        if(serviceName == nil)
+            serviceName = [self.device.class services][service.UUID];
+        name.text = STRING_BY_DEFAULT(serviceName, @"Unknown Service");
+        UUID.text = [service.UUID UUIDString];
+        info.text = service.isPrimary ? @"PRIMARY" : @"SECONDARY";
     }
+    return cell;
 }
 
 /*

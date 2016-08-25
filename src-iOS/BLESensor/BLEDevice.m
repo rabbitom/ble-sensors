@@ -81,7 +81,7 @@
     return STRING_BY_DEFAULT(deviceName, defaultName);
 }
 
-+ (CBUUID *)mainServiceUUID {
++ (NSDictionary *)services {
     return nil;
 }
 

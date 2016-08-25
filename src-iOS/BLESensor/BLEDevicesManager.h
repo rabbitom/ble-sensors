@@ -14,7 +14,7 @@
 + (instancetype)getInstance;
 + (CBCentralManager*)central;
 
-- (void)addDeviceClass: (Class)deviceClass;
+- (void)addDeviceClass: (Class)deviceClass byMainService: (CBUUID*)serviceUUID;
 
 - (void)searchDevices;
 - (void)stopSearching;

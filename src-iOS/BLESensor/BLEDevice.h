@@ -11,7 +11,7 @@
 
 @interface BLEDevice : NSObject <CBPeripheralDelegate>
 
-+ (CBUUID*) mainServiceUUID;
++ (NSDictionary*) services;//ServiceUUID(CBUUID) : serviceName(String)
 
 + (NSDictionary*) characteristics;//CharateristicUUID(CBUUID) : propertyName(String)
 

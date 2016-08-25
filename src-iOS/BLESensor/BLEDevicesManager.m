@@ -56,10 +56,9 @@ static id instance;
     [centralManager stopScan];
 }
 
-- (void)addDeviceClass: (Class)deviceClass {
-    CBUUID *mainServiceUUID = [deviceClass mainServiceUUID];
-    if(mainServiceUUID != nil)
-        [deviceClasses setObject:deviceClass forKey:mainServiceUUID];
+- (void)addDeviceClass: (Class)deviceClass byMainService: (CBUUID*)serviceUUID {
+    if(serviceUUID != nil)
+        [deviceClasses setObject:deviceClass forKey:serviceUUID];
 }
 
 - (id)findDevice: (NSUUID*)deviceId {
