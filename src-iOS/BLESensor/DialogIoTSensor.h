@@ -10,4 +10,7 @@
 
 @interface DialogIoTSensor : BLEDevice
 
+@property (readonly) NSArray* features;
+@property (readonly) BOOL isSensorOn;
+
 @end

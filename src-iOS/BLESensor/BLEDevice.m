@@ -17,8 +17,6 @@
 
     NSMutableArray *servicesOnDiscover;//peripheral services to discover characteristics
     NSMutableArray *characteristicUUIDsToDiscover;
-
-    NSMutableDictionary *propertyCharacteristics;
 }
 
 @end
@@ -113,8 +111,8 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"BLEDevice.ReceviedData" object:self userInfo:@{@"data":data, @"property":propertyName}];
 }
 
-- (void)onPropertyValueChanged: (NSString*)propertyName {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"BLEDevice.ValueChanged" object:self];
+- (void)onValueChanged: (id)value ofProperty: (NSString*)propertyName {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"BLEDevice.ValueChanged" object:self userInfo:@{@"key":propertyName, @"value":value}];
 }
 
 - (void)connect {
@@ -151,6 +149,24 @@
     }
     else
         DLog(@"property has no charactristic");
+}
+
+- (void)readData:(NSString *)propertyName {
+    CBCharacteristic *characteristic = propertyCharacteristics[propertyName];
+    if(characteristic != nil)
+        [self.peripheral readValueForCharacteristic:characteristic];
+}
+
+- (void)startReceiveData: (NSString*)propertyName {
+    CBCharacteristic *characteristic = propertyCharacteristics[propertyName];
+    if(characteristic != nil)
+        [self.peripheral setNotifyValue:YES forCharacteristic:characteristic];
+}
+
+- (void)stopReceiveData: (NSString*)propertyName {
+    CBCharacteristic *characteristic = propertyCharacteristics[propertyName];
+    if(characteristic != nil)
+        [self.peripheral setNotifyValue:NO forCharacteristic:characteristic];
 }
 
 #pragma mark - methods for CBPeripheralDelegate

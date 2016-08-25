@@ -9,6 +9,10 @@
 #ifndef CoolUtility_h
 #define CoolUtility_h
 
+#import <Foundation/Foundation.h>
+
 #define STRING_BY_DEFAULT(a,b) (a != nil) ? a : b
+
+int toIntLE(Byte* bytes, int offset, int length);
 
 #endif /* CoolUtility_h */

@@ -10,7 +10,9 @@
 #import <CoreBluetooth/CoreBluetooth.h>
 
 @interface BLEDevice : NSObject <CBPeripheralDelegate>
-
+{
+    NSMutableDictionary *propertyCharacteristics;
+}
 + (NSDictionary*) services;//ServiceUUID(CBUUID) : serviceName(String)
 
 + (NSDictionary*) characteristics;//CharateristicUUID(CBUUID) : propertyName(String)
@@ -33,7 +35,14 @@
 
 - (void)onConnected;
 - (void)onReceiveData: (NSData*)data forProperty: (NSString*)propertyName;
+- (void)onValueChanged: (id)value ofProperty: (NSString*)propertyName;
 
 - (void)writeData: (NSData*)data forProperty: (NSString*)propertyName;
+
+- (void)setReady;
+
+- (void)readData: (NSString*)propertyName;
+- (void)startReceiveData: (NSString*)propertyName;
+- (void)stopReceiveData: (NSString*)propertyName;
 
 @end
