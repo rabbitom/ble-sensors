@@ -18,6 +18,7 @@
     NSMutableDictionary *features;
     NSString *firmwareVersion;
     BOOL isSensorOn;
+    NSMutableDictionary *settings;
 }
 @end
 
@@ -96,13 +97,15 @@ static NSDictionary* _featureConfigs;
                                @"dimension": @1,
                                @"valueSize": @4,
                                @"unit": @"°C",
-                               @"precision": @2
+                               @"precision": @2,
+                               @"ratio": @100
                                },
                            @"HUMIDITY": @{
                                @"dimension": @1,
                                @"valueSize": @4,
                                @"unit": @"%",
-                               @"precision": @2
+                               @"precision": @2,
+                               @"ratio": @1024
                                },
                            @"SFL": @{
                                @"dimension": @4,
@@ -121,6 +124,88 @@ static NSDictionary* _featureConfigs;
 
 - (BOOL)isSensorOn {
     return isSensorOn;
+}
+
+static NSArray* _settingKeys;
+
++ (NSArray*)settingKeys {
+    if(_settingKeys == nil)
+        _settingKeys = @[@"sensorCombination",
+                         @"accelerometerRange",
+                         @"accelerometerRate",
+                         @"gyroscopeRange",
+                         @"gyroscopeRate",
+                         @"magnetometerRate",
+                         @"environmentalRate",
+                         @"sensorFusionRate",
+                         @"sensorFusionRawDataEnable",
+                         @"calibrationMode",
+                         @"autoCalibrationMode"];
+    return _settingKeys;
+}
+
+enum AcclerometerRanges : Byte {
+    ACC_RANGE_2G = 3,
+    ACC_RANGE_4G = 5,
+    ACC_RANGE_8G = 8,
+    ACC_RANGE_16G = 12
+};
+
+static Byte acclerometerRangeKeys[] = {ACC_RANGE_2G, ACC_RANGE_4G, ACC_RANGE_8G, ACC_RANGE_16G};
+
++ (int) acclerometerRangeValue: (Byte)key {
+    for(int i=0; i<sizeof(acclerometerRangeKeys); i++)
+        if(acclerometerRangeKeys[i] == key)
+            return pow(2, 1 + i);
+    return 0;
+}
+
++ (Byte) acclerometerRangeKeyAtIndex: (int)index {
+    return acclerometerRangeKeys[index];
+}
+
+static NSMutableArray *_acclerometerRangeValues;
+
++ (NSArray*) acclerometerRangeValues {
+    if(_acclerometerRangeValues == nil) {
+        _acclerometerRangeValues = [NSMutableArray array];
+        for(int i=0; i<sizeof(acclerometerRangeKeys); i++)
+            [_acclerometerRangeValues addObject:
+             [NSNumber numberWithInt:
+              [DialogIoTSensor acclerometerRangeValue:
+               acclerometerRangeKeys[i] ] ] ];
+    }
+    return _acclerometerRangeValues;
+}
+
+//enum GyroScopeRanges : Byte {
+//    GYRO_RANGE_2000 = 0,
+//    GYRO_RANGE_1000,
+//    GYRO_RANGE_500,
+//    GYRO_RANGE_250,
+//    GYRO_RANGE_125
+//};
+
+static NSArray* _gyroscopeRangeValues;
+
++ (NSArray*) gyroscopeRnageValues {
+    if(_gyroscopeRangeValues == nil)
+        _gyroscopeRangeValues = @[@2000,
+                                  @1000,
+                                  @500,
+                                  @250,
+                                  @125];
+    return _gyroscopeRangeValues;
+}
+
++ (int) gyroscopeRangeValue: (Byte)key {
+    //return 2000 / pow(2, key);
+    NSNumber *value = [DialogIoTSensor gyroscopeRnageValues][key];
+    return [value intValue];
+}
+
++ (Byte) gyroscopeRangeKeyAtIndex: (int)index {
+    return (Byte)index;
 }
 
 - (void)onReceiveData: (NSData*)data forProperty: (NSString*)propertyName {
@@ -155,9 +240,32 @@ static NSDictionary* _featureConfigs;
         firmwareVersion = [NSString stringWithCString:(const char*)(bytes+7) encoding:NSASCIIStringEncoding];
     }
     else if([propertyName isEqualToString:COMMAND_REPLY]) {
-        Byte commandId = ((Byte*)data.bytes)[1];
+        Byte *bytes = (Byte*)data.bytes;
+        Byte commandId = bytes[1];
         switch(commandId) {
             case ReadSettings:
+            {
+                NSArray *settingKeys = [self.class settingKeys];
+                if(settings == nil)
+                    settings = [NSMutableDictionary dictionary];
+                int k = 0;
+                for(NSString *key in settingKeys)
+                    settings[key] = [NSNumber numberWithUnsignedChar:bytes[k++]];
+                //acc range
+                NSNumber *acclerometerRangeKey = settings[@"acclerometerRange"];
+                if(acclerometerRangeKey != nil) {
+                    SensorFeature *acc = features[@"ACCELEROMETER"];
+                    if(acc != nil)
+                        acc.ratio = 32768 / [self.class acclerometerRangeValue:[acclerometerRangeKey unsignedCharValue]];
+                }
+                //gyro range
+                NSNumber *gyroscopeRangeKey = settings[@"gyroscopeRange"];
+                if(gyroscopeRangeKey != nil) {
+                    SensorFeature *gyro = features[@"GYROSCOPE"];
+                    if(gyro != nil)
+                        gyro.ratio = 32800.0 / [self.class gyroscopeRangeValue:[gyroscopeRangeKey unsignedCharValue]];
+                }
+            }
                 break;
             case SensorOn:
                 isSensorOn = YES;
