@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E22EFD0C1D717BCF00C7EC91 /* DeviceDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E22EFD0B1D717BCF00C7EC91 /* DeviceDataViewController.m */; };
 		E25000721D6DA18800C11438 /* DeviceDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E25000711D6DA18800C11438 /* DeviceDetailsViewController.m */; };
 		E25000751D6DC68D00C11438 /* DeviceAdvertisementsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E25000741D6DC68D00C11438 /* DeviceAdvertisementsViewController.m */; };
 		E252DFDD1D6EDE73005AEF28 /* bledevices.json in Resources */ = {isa = PBXBuildFile; fileRef = E252DFDC1D6EDE73005AEF28 /* bledevices.json */; };
@@ -26,6 +27,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E22EFD0A1D717BCF00C7EC91 /* DeviceDataViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceDataViewController.h; sourceTree = "<group>"; };
+		E22EFD0B1D717BCF00C7EC91 /* DeviceDataViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceDataViewController.m; sourceTree = "<group>"; };
 		E25000701D6DA18800C11438 /* DeviceDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceDetailsViewController.h; sourceTree = "<group>"; };
 		E25000711D6DA18800C11438 /* DeviceDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceDetailsViewController.m; sourceTree = "<group>"; };
 		E25000731D6DC68D00C11438 /* DeviceAdvertisementsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceAdvertisementsViewController.h; sourceTree = "<group>"; };
@@ -92,6 +95,8 @@
 				E26E1C101D6C37620013B175 /* DeviceServicesViewController.m */,
 				E25000731D6DC68D00C11438 /* DeviceAdvertisementsViewController.h */,
 				E25000741D6DC68D00C11438 /* DeviceAdvertisementsViewController.m */,
+				E22EFD0A1D717BCF00C7EC91 /* DeviceDataViewController.h */,
+				E22EFD0B1D717BCF00C7EC91 /* DeviceDataViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -245,6 +250,7 @@
 				E26E1C141D6C426D0013B175 /* BLEUtility.m in Sources */,
 				E25000721D6DA18800C11438 /* DeviceDetailsViewController.m in Sources */,
 				E2CA7EB41D62FF5E00CA3156 /* main.m in Sources */,
+				E22EFD0C1D717BCF00C7EC91 /* DeviceDataViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

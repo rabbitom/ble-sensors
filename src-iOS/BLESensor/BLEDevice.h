@@ -44,5 +44,6 @@
 - (void)readData: (NSString*)propertyName;
 - (void)startReceiveData: (NSString*)propertyName;
 - (void)stopReceiveData: (NSString*)propertyName;
+- (BOOL)isReceivingData: (NSString*)propertyName;
 
 @end

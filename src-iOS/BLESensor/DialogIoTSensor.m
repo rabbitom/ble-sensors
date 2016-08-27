@@ -9,6 +9,10 @@
 #import "DialogIoTSensor.h"
 #import "SensorFeature.h"
 
+#define DEVICE_FEATURES @"Device Features"
+#define CONTROL_POINT   @"Control Point"
+#define COMMAND_REPLY   @"Command Reply"
+
 @interface DialogIoTSensor()
 {
     NSMutableDictionary *features;
@@ -39,9 +43,9 @@ static NSDictionary* _characteristics = nil;
                              [CBUUID UUIDWithString:@"2ea78970-7d44-44bb-b097-26183f402405"] : @"HUMIDITY",//notify
                              [CBUUID UUIDWithString:@"2ea78970-7d44-44bb-b097-26183f402406"] : @"TEMPERATURE",//notify
                              [CBUUID UUIDWithString:@"2ea78970-7d44-44bb-b097-26183f402407"] : @"SFL",//notify
-                             [CBUUID UUIDWithString:@"2ea78970-7d44-44bb-b097-26183f402408"] : @"Device Features",//read
-                             [CBUUID UUIDWithString:@"2ea78970-7d44-44bb-b097-26183f402409"] : @"Control Point",//write
-                             [CBUUID UUIDWithString:@"2ea78970-7d44-44bb-b097-26183f40240a"] : @"Command Reply"//notify
+                             [CBUUID UUIDWithString:@"2ea78970-7d44-44bb-b097-26183f402408"] : DEVICE_FEATURES,//read
+                             [CBUUID UUIDWithString:@"2ea78970-7d44-44bb-b097-26183f402409"] : CONTROL_POINT,//write
+                             [CBUUID UUIDWithString:@"2ea78970-7d44-44bb-b097-26183f40240a"] : COMMAND_REPLY//notify
                              };
     return _characteristics;
 }
@@ -55,8 +59,8 @@ enum : Byte {
 };
 
 - (void)setReady {
-    [self readData:@"Device Features"];
-    [self startReceiveData:@"Command Reply"];
+    [self readData:DEVICE_FEATURES];
+    [self startReceiveData:COMMAND_REPLY];
     [super setReady];
 }
 
@@ -125,7 +129,7 @@ static NSDictionary* _featureConfigs;
         if([feature parseData:data])
             [self onValueChanged:feature ofProperty:propertyName];
     }
-    else if([propertyName isEqualToString:@"Device Features"]) {
+    else if([propertyName isEqualToString:DEVICE_FEATURES]) {
         if(data.length <= 7)
             return;
         if(features == nil)
@@ -150,7 +154,7 @@ static NSDictionary* _featureConfigs;
         }
         firmwareVersion = [NSString stringWithCString:(const char*)(bytes+7) encoding:NSASCIIStringEncoding];
     }
-    else if([propertyName isEqualToString:@"Command Reply"]) {
+    else if([propertyName isEqualToString:COMMAND_REPLY]) {
         Byte commandId = ((Byte*)data.bytes)[1];
         switch(commandId) {
             case ReadSettings:
@@ -177,6 +181,18 @@ static NSDictionary* _featureConfigs;
         feature.valueOffset = 3;
         [features setObject: feature forKey: propertyName];
     }
+}
+
+- (void)startReceiveData:(NSString *)propertyName {
+    if((features[propertyName] != nil) && (!self.isSensorOn)) {
+        Byte commandId = SensorOn;
+        [self writeData:[NSData dataWithBytes:&commandId length:1] forProperty:CONTROL_POINT];
+    }
+    [super startReceiveData:propertyName];
+}
+
+- (BOOL)isReceivingData:(NSString *)propertyName {
+    return self.isSensorOn && [super isReceivingData:propertyName];
 }
 
 @end

@@ -210,7 +210,7 @@
         <!--Device Data-->
         <scene sceneID="GoJ-Ob-n18">
             <objects>
-                <viewController title="Device Data" id="zOq-ZY-wAW" sceneMemberID="viewController">
+                <viewController title="Device Data" id="zOq-ZY-wAW" customClass="DeviceDataViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Q8a-Ab-J1q"/>
                         <viewControllerLayoutGuide type="bottom" id="t61-EB-14I"/>
@@ -218,9 +218,57 @@
                     <view key="view" contentMode="scaleToFill" id="72z-pQ-CiT">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[Property]" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WlF-ca-PoZ">
+                                <rect key="frame" x="261" y="72" width="79" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ETN-RW-ciS">
+                                <rect key="frame" x="531" y="101" width="51" height="31"/>
+                                <connections>
+                                    <action selector="toggleNotification:" destination="zOq-ZY-wAW" eventType="valueChanged" id="QLh-6s-Ecv"/>
+                                </connections>
+                            </switch>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dlp-Bw-uik">
+                                <rect key="frame" x="20" y="140" width="560" height="336"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[Current Value]" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jkq-LD-XMT">
+                                <rect key="frame" x="242" y="484" width="117" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DSV-U7-U1x">
+                                <rect key="frame" x="20" y="513" width="57" height="30"/>
+                                <state key="normal" title="Settings"/>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Dlp-Bw-uik" firstAttribute="leading" secondItem="72z-pQ-CiT" secondAttribute="leadingMargin" id="0n9-3q-aTx"/>
+                            <constraint firstItem="WlF-ca-PoZ" firstAttribute="centerX" secondItem="72z-pQ-CiT" secondAttribute="centerX" id="1ir-P5-Y1L"/>
+                            <constraint firstItem="Dlp-Bw-uik" firstAttribute="top" secondItem="ETN-RW-ciS" secondAttribute="bottom" constant="8" id="4GG-zk-GjD"/>
+                            <constraint firstItem="ETN-RW-ciS" firstAttribute="trailing" secondItem="72z-pQ-CiT" secondAttribute="trailingMargin" id="Bjo-lL-LCn"/>
+                            <constraint firstItem="ETN-RW-ciS" firstAttribute="top" secondItem="WlF-ca-PoZ" secondAttribute="bottom" constant="8" id="JkF-9g-XVi"/>
+                            <constraint firstItem="WlF-ca-PoZ" firstAttribute="top" secondItem="Q8a-Ab-J1q" secondAttribute="bottom" constant="8" id="MGL-gs-j7T"/>
+                            <constraint firstItem="Jkq-LD-XMT" firstAttribute="centerX" secondItem="72z-pQ-CiT" secondAttribute="centerX" id="QZW-ru-WHL"/>
+                            <constraint firstItem="DSV-U7-U1x" firstAttribute="leading" secondItem="72z-pQ-CiT" secondAttribute="leadingMargin" id="dMe-dx-HwS"/>
+                            <constraint firstItem="t61-EB-14I" firstAttribute="top" secondItem="DSV-U7-U1x" secondAttribute="bottom" constant="8" id="ker-N3-DGF"/>
+                            <constraint firstItem="Dlp-Bw-uik" firstAttribute="trailing" secondItem="72z-pQ-CiT" secondAttribute="trailingMargin" id="lj2-f3-uNJ"/>
+                            <constraint firstItem="DSV-U7-U1x" firstAttribute="top" secondItem="Jkq-LD-XMT" secondAttribute="bottom" constant="8" id="xeo-tr-are"/>
+                            <constraint firstItem="Jkq-LD-XMT" firstAttribute="top" secondItem="Dlp-Bw-uik" secondAttribute="bottom" constant="8" id="xuJ-vl-fbD"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Data" image="chart" id="SCx-GK-dd7"/>
+                    <connections>
+                        <outlet property="curValue" destination="Jkq-LD-XMT" id="ATk-6f-2lG"/>
+                        <outlet property="notification" destination="ETN-RW-ciS" id="w0e-sT-gbe"/>
+                        <outlet property="property" destination="WlF-ca-PoZ" id="66t-0J-VOk"/>
+                        <outlet property="settings" destination="DSV-U7-U1x" id="icZ-fG-B6N"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hd9-hm-dsb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

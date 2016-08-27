@@ -7,10 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "BLEDevice.h"
+#import "DeviceDetailsViewController.h"
 
-@interface DeviceServicesViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
-
-@property BLEDevice *device;
+@interface DeviceServicesViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, DeviceDetailController>
 
 @end

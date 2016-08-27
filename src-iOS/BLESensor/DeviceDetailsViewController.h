@@ -9,8 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "BLEDevice.h"
 
-@interface DeviceDetailsViewController : UITabBarController
+@protocol DeviceDetailController <NSObject>
 
 @property BLEDevice *device;
+
+@end
+
+
+@interface DeviceDetailsViewController : UITabBarController <DeviceDetailController>
 
 @end

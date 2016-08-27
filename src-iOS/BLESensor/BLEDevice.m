@@ -169,6 +169,14 @@
         [self.peripheral setNotifyValue:NO forCharacteristic:characteristic];
 }
 
+- (BOOL)isReceivingData: (NSString*)propertyName {
+    CBCharacteristic *characteristic = propertyCharacteristics[propertyName];
+    if(characteristic != nil)
+        return characteristic.isNotifying;
+    else
+        return NO;
+}
+
 #pragma mark - methods for CBPeripheralDelegate
 
 //发现了服务
@@ -200,7 +208,7 @@
                 NSString *propertyName = [self.class characteristics][characteristicUUID];
                 [propertyCharacteristics setObject:characteristic forKey:propertyName];
                 [characteristicUUIDsToDiscover removeObject:characteristicUUID];
-                break;
+                DLog(@"found characteristic for property: %@", propertyName);
             }
         }
     if(servicesOnDiscover.count == 0)
@@ -215,8 +223,13 @@
         return;
     }
     NSString *propertyName = [[self.class characteristics] objectForKey:characteristic.UUID];
-    if(propertyName != nil)
+    if(propertyName != nil) {
         [self onReceiveData:characteristic.value forProperty:propertyName];
+        DLog(@"data for %@ = %@", propertyName, characteristic.value);
+    }
+    else {
+        DLog(@"value for %@ = %@", characteristic.UUID, characteristic.value);
+    }
 }
 
 @end

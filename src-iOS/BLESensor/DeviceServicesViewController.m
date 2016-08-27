@@ -12,7 +12,6 @@
 
 @interface DeviceServicesViewController ()
 {
-    BLEDevice *_devcie;
     BOOL showCharacteristics;
 }
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segments;
@@ -20,6 +19,8 @@
 @end
 
 @implementation DeviceServicesViewController
+
+@synthesize device;
 
 - (void)viewDidLoad {
     [super viewDidLoad];

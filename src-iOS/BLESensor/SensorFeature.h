@@ -25,5 +25,6 @@
 - (id)initWithConfig: (NSDictionary*)sensorConfig;
 - (BOOL)parseData: (NSData*)data;
 - (NSArray*)values;
+- (NSString*)valueString;
 
 @end

@@ -18,6 +18,8 @@
 
 @implementation DeviceAdvertisementsViewController
 
+@synthesize device;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.deviceUUID.text = self.device.deviceKey;

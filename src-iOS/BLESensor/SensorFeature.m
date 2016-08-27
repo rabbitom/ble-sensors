@@ -46,4 +46,30 @@
     return [NSArray arrayWithArray:values];
 }
 
+- (NSString*)valueString {
+    if(self.dimension == 1)
+        return [NSString stringWithFormat:@"%@ %@", self.values[0], self.unit];
+    else {
+        NSMutableArray *valueStrs = [NSMutableArray array];
+        for(int v=0; v<self.dimension; v++)
+            [valueStrs addObject:
+             [self valueStr:
+              [(NSNumber*)self.values[v] floatValue] ] ];
+        return [NSString stringWithFormat:@"[%@] %@", [valueStrs componentsJoinedByString:@", "], self.unit];
+    }
+}
+
+- (NSString*)valueStr: (float)value {
+    if(self.precision > 0) {
+        NSString *formatString = [NSString stringWithFormat:@"%%.%if", self.precision];
+        return [NSString stringWithFormat:formatString, value];
+    }
+    else
+        return [NSString stringWithFormat:@"%i", (int)value];
+}
+
+- (NSString*)description {
+    return [NSString stringWithFormat:@"%@: %@", self.name, self.valueString];
+}
+
 @end
