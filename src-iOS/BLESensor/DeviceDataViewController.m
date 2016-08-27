@@ -8,6 +8,7 @@
 
 #import "DeviceDataViewController.h"
 #import "DialogIoTSensor.h"
+#import "SensorFeature.h"
 
 @interface DeviceDataViewController ()
 {
@@ -19,9 +20,13 @@
 @property (weak, nonatomic) IBOutlet UILabel *curValue;
 @property (weak, nonatomic) IBOutlet UIButton *settings;
 
+@property SensorFeature *feature;
+
 @end
 
 @implementation DeviceDataViewController
+
+@synthesize feature;
 
 - (BLEDevice*)device {
     return sensor;
@@ -45,8 +50,12 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    if((self.feature == nil) && (sensor.features.count > 0))
-        self.feature = sensor.features[0];
+    if(sensor.features != nil) {
+        if(self.propertyName != nil)
+            self.feature = sensor.features[self.propertyName];
+        else if((self.feature == nil) && (sensor.features.count > 0))
+            self.feature = sensor.features.allValues[0];
+    }
     if(self.feature == nil) {
         self.property.text = @"No Available Sensor";
         [self showValueViews:NO];

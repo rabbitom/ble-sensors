@@ -8,10 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "DeviceDetailsViewController.h"
-#import "SensorFeature.h"
 
 @interface DeviceDataViewController : UIViewController<DeviceDetailController>
 
-@property SensorFeature *feature;
+@property NSString* propertyName;
 
 @end

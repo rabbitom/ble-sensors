@@ -62,6 +62,7 @@ enum : Byte {
 - (void)setReady {
     [self readData:DEVICE_FEATURES];
     [self startReceiveData:COMMAND_REPLY];
+    [self writeControlCommand:ReadSettings];
     [super setReady];
 }
 
@@ -118,8 +119,8 @@ static NSDictionary* _featureConfigs;
     return _featureConfigs;
 }
 
-- (NSArray*)features {
-    return features.allValues;
+- (NSDictionary*)features {
+    return features;
 }
 
 - (BOOL)isSensorOn {
@@ -248,11 +249,11 @@ static NSArray* _gyroscopeRangeValues;
                 NSArray *settingKeys = [self.class settingKeys];
                 if(settings == nil)
                     settings = [NSMutableDictionary dictionary];
-                int k = 0;
+                int kOffset = 2;
                 for(NSString *key in settingKeys)
-                    settings[key] = [NSNumber numberWithUnsignedChar:bytes[k++]];
+                    settings[key] = [NSNumber numberWithUnsignedChar:bytes[kOffset++]];
                 //acc range
-                NSNumber *acclerometerRangeKey = settings[@"acclerometerRange"];
+                NSNumber *acclerometerRangeKey = settings[@"accelerometerRange"];
                 if(acclerometerRangeKey != nil) {
                     SensorFeature *acc = features[@"ACCELEROMETER"];
                     if(acc != nil)
@@ -292,15 +293,17 @@ static NSArray* _gyroscopeRangeValues;
 }
 
 - (void)startReceiveData:(NSString *)propertyName {
-    if((features[propertyName] != nil) && (!self.isSensorOn)) {
-        Byte commandId = SensorOn;
-        [self writeData:[NSData dataWithBytes:&commandId length:1] forProperty:CONTROL_POINT];
-    }
+    if((features[propertyName] != nil) && (!self.isSensorOn))
+        [self writeControlCommand:SensorOn];
     [super startReceiveData:propertyName];
 }
 
 - (BOOL)isReceivingData:(NSString *)propertyName {
     return self.isSensorOn && [super isReceivingData:propertyName];
+}
+
+- (void)writeControlCommand: (Byte)commandId {
+    [self writeData:[NSData dataWithBytes:&commandId length:1] forProperty:CONTROL_POINT];
 }
 
 @end

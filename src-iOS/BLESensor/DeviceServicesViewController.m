@@ -9,10 +9,12 @@
 #import "DeviceServicesViewController.h"
 #import "BLEUtility.h"
 #import "CoolUtility.h"
+#import "DeviceDataViewController.h"
 
 @interface DeviceServicesViewController ()
 {
     BOOL showCharacteristics;
+    DeviceDataViewController *deviceDataViewController;
 }
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segments;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -48,6 +50,7 @@
 
 - (IBAction)toggleServicesAndCharacteristics:(id)sender {
     showCharacteristics = (self.segments.selectedSegmentIndex == 1);
+    self.tableView.allowsSelection = showCharacteristics;
     [self.tableView reloadData];
 }
 
@@ -145,6 +148,31 @@
     return YES;
 }
 */
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if(!showCharacteristics)
+        return;
+    if(deviceDataViewController == nil) {
+        UITabBarController *tabBarController = self.tabBarController;
+        for(UIViewController *vc in tabBarController.viewControllers) {
+            if(vc.class == DeviceDataViewController.class) {
+                deviceDataViewController = (DeviceDataViewController*)vc;
+            }
+        }
+    }
+    if(deviceDataViewController == nil)
+        return;
+    CBService *service = self.device.peripheral.services[indexPath.section];
+    CBCharacteristic *characteristic = service.characteristics[indexPath.row];
+    NSString *characteristicName = nil;
+    NSDictionary *deviceDefinedCharacteristics = [self.device.class characteristics];
+    if(deviceDefinedCharacteristics != nil)
+        characteristicName = deviceDefinedCharacteristics[characteristic.UUID];
+    if(characteristicName == nil)
+        return;
+    deviceDataViewController.propertyName = characteristicName;
+    self.tabBarController.selectedViewController = deviceDataViewController;
+}
 
 /*
 #pragma mark - Navigation
