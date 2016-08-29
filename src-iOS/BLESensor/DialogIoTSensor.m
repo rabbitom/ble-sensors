@@ -63,6 +63,7 @@ enum : Byte {
     [self readData:DEVICE_FEATURES];
     [self startReceiveData:COMMAND_REPLY];
     [self writeControlCommand:ReadSettings];
+    isSensorOn = NO;
     [super setReady];
 }
 
