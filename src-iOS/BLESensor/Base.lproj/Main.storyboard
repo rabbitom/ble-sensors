@@ -231,9 +231,29 @@
                                     <action selector="toggleNotification:" destination="zOq-ZY-wAW" eventType="valueChanged" id="QLh-6s-Ecv"/>
                                 </connections>
                             </switch>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dlp-Bw-uik">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dlp-Bw-uik" customClass="ChartView">
                                 <rect key="frame" x="20" y="140" width="560" height="336"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[MaxValue]" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vdh-Rg-E7j">
+                                        <rect key="frame" x="0.0" y="0.0" width="86" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[MinValue]" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xbr-pj-cw0">
+                                        <rect key="frame" x="0.0" y="315" width="81" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.88235294119999996" green="0.88235294119999996" blue="0.88235294119999996" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="Vdh-Rg-E7j" firstAttribute="top" secondItem="Dlp-Bw-uik" secondAttribute="top" id="J24-78-hpk"/>
+                                    <constraint firstItem="xbr-pj-cw0" firstAttribute="leading" secondItem="Dlp-Bw-uik" secondAttribute="leading" id="Qi7-Zg-nNk"/>
+                                    <constraint firstAttribute="bottom" secondItem="xbr-pj-cw0" secondAttribute="bottom" id="fes-LW-Ke8"/>
+                                    <constraint firstItem="Vdh-Rg-E7j" firstAttribute="leading" secondItem="Dlp-Bw-uik" secondAttribute="leading" id="pBF-ph-3jZ"/>
+                                </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[Current Value]" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jkq-LD-XMT">
                                 <rect key="frame" x="242" y="484" width="117" height="21"/>
@@ -264,7 +284,10 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Data" image="chart" id="SCx-GK-dd7"/>
                     <connections>
+                        <outlet property="chartView" destination="Dlp-Bw-uik" id="W61-Wt-5nI"/>
                         <outlet property="curValue" destination="Jkq-LD-XMT" id="ATk-6f-2lG"/>
+                        <outlet property="maxValue" destination="Vdh-Rg-E7j" id="V5k-Kx-lyk"/>
+                        <outlet property="minValue" destination="xbr-pj-cw0" id="tko-O2-zP2"/>
                         <outlet property="notification" destination="ETN-RW-ciS" id="w0e-sT-gbe"/>
                         <outlet property="property" destination="WlF-ca-PoZ" id="66t-0J-VOk"/>
                         <outlet property="settings" destination="DSV-U7-U1x" id="icZ-fG-B6N"/>

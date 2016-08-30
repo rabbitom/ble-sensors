@@ -9,6 +9,7 @@
 #import "DeviceDataViewController.h"
 #import "DialogIoTSensor.h"
 #import "SensorFeature.h"
+#import "ChartView.h"
 
 @interface DeviceDataViewController ()
 {
@@ -18,7 +19,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *property;
 @property (weak, nonatomic) IBOutlet UISwitch *notification;
 @property (weak, nonatomic) IBOutlet UILabel *curValue;
+@property (weak, nonatomic) IBOutlet UILabel *maxValue;
+@property (weak, nonatomic) IBOutlet UILabel *minValue;
 @property (weak, nonatomic) IBOutlet UIButton *settings;
+@property (weak, nonatomic) IBOutlet ChartView *chartView;
 
 @property SensorFeature *feature;
 
@@ -44,7 +48,7 @@
 }
 
 - (void)showValueViews: (BOOL)visible {
-    for(UIView *view in @[self.property, self.notification, self.curValue, self.settings])
+    for(UIView *view in @[self.property, self.notification, self.curValue, self.maxValue, self.minValue, self.settings])
         view.hidden = !visible;
 }
 
@@ -64,6 +68,7 @@
         [self showValueViews:YES];
         self.property.text = self.feature.name;
         self.notification.on = [self.device isReceivingData:self.feature.name];
+        self.chartView.dimension = self.feature.dimension;
     }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceValueChanged:) name:@"BLEDevice.ValueChanged" object:self.device];
 }
@@ -84,6 +89,15 @@
         return;
     if([key isEqualToString:self.feature.name]) {
         self.curValue.text = self.feature.valueString;
+        [self.chartView addValues:self.feature.values];
+        self.maxValue.text = [NSString stringWithFormat:@"%@ %@",
+                              [self.feature valueString:
+                               [NSNumber numberWithFloat:self.chartView.maxValue]],
+                              self.feature.unit];
+        self.minValue.text = [NSString stringWithFormat:@"%@ %@",
+                              [self.feature valueString:
+                               [NSNumber numberWithFloat:self.chartView.minValue]],
+                              self.feature.unit];
     }
 }
 

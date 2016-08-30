@@ -26,5 +26,6 @@
 - (BOOL)parseData: (NSData*)data;
 - (NSArray*)values;
 - (NSString*)valueString;
+- (NSString*)valueString: (NSNumber*)value;
 
 @end

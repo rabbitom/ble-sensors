@@ -16,6 +16,7 @@
 		E26E1C0E1D6BF5050013B175 /* DialogIoTSensor.m in Sources */ = {isa = PBXBuildFile; fileRef = E26E1C0D1D6BF5050013B175 /* DialogIoTSensor.m */; };
 		E26E1C111D6C37620013B175 /* DeviceServicesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E26E1C101D6C37620013B175 /* DeviceServicesViewController.m */; };
 		E26E1C141D6C426D0013B175 /* BLEUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = E26E1C131D6C426D0013B175 /* BLEUtility.m */; };
+		E282BC4C1D74F016000DC84A /* ChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = E282BC4B1D74F016000DC84A /* ChartView.m */; };
 		E29B3E601D6B0747002B500A /* DeviceListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E29B3E5F1D6B0747002B500A /* DeviceListViewController.m */; };
 		E2CA7EB41D62FF5E00CA3156 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E2CA7EB31D62FF5E00CA3156 /* main.m */; };
 		E2CA7EB71D62FF5E00CA3156 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E2CA7EB61D62FF5E00CA3156 /* AppDelegate.m */; };
@@ -44,6 +45,8 @@
 		E26E1C121D6C426D0013B175 /* BLEUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLEUtility.h; sourceTree = "<group>"; };
 		E26E1C131D6C426D0013B175 /* BLEUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLEUtility.m; sourceTree = "<group>"; };
 		E26E1C171D6C470B0013B175 /* CoolUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoolUtility.h; sourceTree = "<group>"; };
+		E282BC4A1D74F016000DC84A /* ChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChartView.h; sourceTree = "<group>"; };
+		E282BC4B1D74F016000DC84A /* ChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChartView.m; sourceTree = "<group>"; };
 		E29B3E5D1D6AE194002B500A /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		E29B3E5E1D6B0747002B500A /* DeviceListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceListViewController.h; sourceTree = "<group>"; };
 		E29B3E5F1D6B0747002B500A /* DeviceListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceListViewController.m; sourceTree = "<group>"; };
@@ -135,6 +138,8 @@
 				E26E1C161D6C430E0013B175 /* Controllers */,
 				E2CA7EB51D62FF5E00CA3156 /* AppDelegate.h */,
 				E2CA7EB61D62FF5E00CA3156 /* AppDelegate.m */,
+				E282BC4A1D74F016000DC84A /* ChartView.h */,
+				E282BC4B1D74F016000DC84A /* ChartView.m */,
 				E2CA7EBB1D62FF5E00CA3156 /* Main.storyboard */,
 				E2CA7EBE1D62FF5E00CA3156 /* Assets.xcassets */,
 				E2CA7EC01D62FF5E00CA3156 /* LaunchScreen.storyboard */,
@@ -241,6 +246,7 @@
 				E2CA7ED51D6304CE00CA3156 /* BLEDevicesManager.m in Sources */,
 				E252DFE21D6F2CCB005AEF28 /* CoolUtility.m in Sources */,
 				E252DFE01D6F1272005AEF28 /* SensorFeature.m in Sources */,
+				E282BC4C1D74F016000DC84A /* ChartView.m in Sources */,
 				E29B3E601D6B0747002B500A /* DeviceListViewController.m in Sources */,
 				E2CA7ED21D63040500CA3156 /* BLEDevice.m in Sources */,
 				E26E1C0E1D6BF5050013B175 /* DialogIoTSensor.m in Sources */,
