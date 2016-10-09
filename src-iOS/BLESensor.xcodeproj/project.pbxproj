@@ -7,7 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E2250C1A1DAAF31F00492461 /* Farmhouse.mtl in Resources */ = {isa = PBXBuildFile; fileRef = E2250C181DAAF31F00492461 /* Farmhouse.mtl */; };
+		E2250C1B1DAAF31F00492461 /* Farmhouse.obj in Resources */ = {isa = PBXBuildFile; fileRef = E2250C191DAAF31F00492461 /* Farmhouse.obj */; };
+		E2250C1E1DAAF36C00492461 /* Farmhouse Texture Bump Map .jpg in Resources */ = {isa = PBXBuildFile; fileRef = E2250C1C1DAAF36C00492461 /* Farmhouse Texture Bump Map .jpg */; };
+		E2250C1F1DAAF36C00492461 /* Farmhouse Texture.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E2250C1D1DAAF36C00492461 /* Farmhouse Texture.jpg */; };
+		E2250C2A1DAAF41600492461 /* a380_01.tga in Resources */ = {isa = PBXBuildFile; fileRef = E2250C211DAAF41600492461 /* a380_01.tga */; };
+		E2250C2B1DAAF41600492461 /* A380_L.tga in Resources */ = {isa = PBXBuildFile; fileRef = E2250C221DAAF41600492461 /* A380_L.tga */; };
+		E2250C2C1DAAF41600492461 /* A380_mw.tga in Resources */ = {isa = PBXBuildFile; fileRef = E2250C231DAAF41600492461 /* A380_mw.tga */; };
+		E2250C2D1DAAF41600492461 /* A380_part1.tga in Resources */ = {isa = PBXBuildFile; fileRef = E2250C241DAAF41600492461 /* A380_part1.tga */; };
+		E2250C2E1DAAF41600492461 /* A380_part2.tga in Resources */ = {isa = PBXBuildFile; fileRef = E2250C251DAAF41600492461 /* A380_part2.tga */; };
+		E2250C2F1DAAF41600492461 /* A380_part3.tga in Resources */ = {isa = PBXBuildFile; fileRef = E2250C261DAAF41600492461 /* A380_part3.tga */; };
+		E2250C301DAAF41600492461 /* A380_R.tga in Resources */ = {isa = PBXBuildFile; fileRef = E2250C271DAAF41600492461 /* A380_R.tga */; };
+		E2250C311DAAF41600492461 /* b737_800_2_T.tga in Resources */ = {isa = PBXBuildFile; fileRef = E2250C281DAAF41600492461 /* b737_800_2_T.tga */; };
+		E2250C321DAAF41600492461 /* chrome1.tga in Resources */ = {isa = PBXBuildFile; fileRef = E2250C291DAAF41600492461 /* chrome1.tga */; };
 		E22EFD0C1D717BCF00C7EC91 /* DeviceDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E22EFD0B1D717BCF00C7EC91 /* DeviceDataViewController.m */; };
+		E23329391DAAF0EB0097095C /* A380.mtl in Resources */ = {isa = PBXBuildFile; fileRef = E23329371DAAF0EB0097095C /* A380.mtl */; };
+		E233293A1DAAF0EB0097095C /* A380.obj in Resources */ = {isa = PBXBuildFile; fileRef = E23329381DAAF0EB0097095C /* A380.obj */; };
 		E25000721D6DA18800C11438 /* DeviceDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E25000711D6DA18800C11438 /* DeviceDetailsViewController.m */; };
 		E25000751D6DC68D00C11438 /* DeviceAdvertisementsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E25000741D6DC68D00C11438 /* DeviceAdvertisementsViewController.m */; };
 		E252DFDD1D6EDE73005AEF28 /* bledevices.json in Resources */ = {isa = PBXBuildFile; fileRef = E252DFDC1D6EDE73005AEF28 /* bledevices.json */; };
@@ -20,6 +35,9 @@
 		E2975F441DAAD82C00361521 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2975F431DAAD82C00361521 /* OpenGLES.framework */; };
 		E2975F461DAAD83100361521 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2975F451DAAD83100361521 /* QuartzCore.framework */; };
 		E2975F481DAAD84000361521 /* NinevehGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2975F471DAAD84000361521 /* NinevehGL.framework */; };
+		E2975F4B1DAAE2BC00361521 /* Device3DViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2975F4A1DAAE2BC00361521 /* Device3DViewController.m */; };
+		E2975F4E1DAAE81B00361521 /* RubixCube.mtl in Resources */ = {isa = PBXBuildFile; fileRef = E2975F4C1DAAE81B00361521 /* RubixCube.mtl */; };
+		E2975F4F1DAAE81B00361521 /* RubixCube.obj in Resources */ = {isa = PBXBuildFile; fileRef = E2975F4D1DAAE81B00361521 /* RubixCube.obj */; };
 		E29B3E601D6B0747002B500A /* DeviceListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E29B3E5F1D6B0747002B500A /* DeviceListViewController.m */; };
 		E2CA7EB41D62FF5E00CA3156 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E2CA7EB31D62FF5E00CA3156 /* main.m */; };
 		E2CA7EB71D62FF5E00CA3156 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E2CA7EB61D62FF5E00CA3156 /* AppDelegate.m */; };
@@ -31,8 +49,23 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E2250C181DAAF31F00492461 /* Farmhouse.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Farmhouse.mtl; sourceTree = "<group>"; };
+		E2250C191DAAF31F00492461 /* Farmhouse.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Farmhouse.obj; sourceTree = "<group>"; };
+		E2250C1C1DAAF36C00492461 /* Farmhouse Texture Bump Map .jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Farmhouse Texture Bump Map .jpg"; sourceTree = "<group>"; };
+		E2250C1D1DAAF36C00492461 /* Farmhouse Texture.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Farmhouse Texture.jpg"; sourceTree = "<group>"; };
+		E2250C211DAAF41600492461 /* a380_01.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = a380_01.tga; sourceTree = "<group>"; };
+		E2250C221DAAF41600492461 /* A380_L.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = A380_L.tga; sourceTree = "<group>"; };
+		E2250C231DAAF41600492461 /* A380_mw.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = A380_mw.tga; sourceTree = "<group>"; };
+		E2250C241DAAF41600492461 /* A380_part1.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = A380_part1.tga; sourceTree = "<group>"; };
+		E2250C251DAAF41600492461 /* A380_part2.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = A380_part2.tga; sourceTree = "<group>"; };
+		E2250C261DAAF41600492461 /* A380_part3.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = A380_part3.tga; sourceTree = "<group>"; };
+		E2250C271DAAF41600492461 /* A380_R.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = A380_R.tga; sourceTree = "<group>"; };
+		E2250C281DAAF41600492461 /* b737_800_2_T.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = b737_800_2_T.tga; sourceTree = "<group>"; };
+		E2250C291DAAF41600492461 /* chrome1.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = chrome1.tga; sourceTree = "<group>"; };
 		E22EFD0A1D717BCF00C7EC91 /* DeviceDataViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceDataViewController.h; sourceTree = "<group>"; };
 		E22EFD0B1D717BCF00C7EC91 /* DeviceDataViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceDataViewController.m; sourceTree = "<group>"; };
+		E23329371DAAF0EB0097095C /* A380.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = A380.mtl; sourceTree = "<group>"; };
+		E23329381DAAF0EB0097095C /* A380.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = A380.obj; sourceTree = "<group>"; };
 		E25000701D6DA18800C11438 /* DeviceDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceDetailsViewController.h; sourceTree = "<group>"; };
 		E25000711D6DA18800C11438 /* DeviceDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceDetailsViewController.m; sourceTree = "<group>"; };
 		E25000731D6DC68D00C11438 /* DeviceAdvertisementsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceAdvertisementsViewController.h; sourceTree = "<group>"; };
@@ -53,6 +86,10 @@
 		E2975F431DAAD82C00361521 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		E2975F451DAAD83100361521 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		E2975F471DAAD84000361521 /* NinevehGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NinevehGL.framework; sourceTree = "<group>"; };
+		E2975F491DAAE2BC00361521 /* Device3DViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Device3DViewController.h; sourceTree = "<group>"; };
+		E2975F4A1DAAE2BC00361521 /* Device3DViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Device3DViewController.m; sourceTree = "<group>"; };
+		E2975F4C1DAAE81B00361521 /* RubixCube.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RubixCube.mtl; sourceTree = "<group>"; };
+		E2975F4D1DAAE81B00361521 /* RubixCube.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RubixCube.obj; sourceTree = "<group>"; };
 		E29B3E5D1D6AE194002B500A /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		E29B3E5E1D6B0747002B500A /* DeviceListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceListViewController.h; sourceTree = "<group>"; };
 		E29B3E5F1D6B0747002B500A /* DeviceListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceListViewController.m; sourceTree = "<group>"; };
@@ -84,6 +121,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E2250C201DAAF41600492461 /* Factory Livery */ = {
+			isa = PBXGroup;
+			children = (
+				E2250C211DAAF41600492461 /* a380_01.tga */,
+				E2250C221DAAF41600492461 /* A380_L.tga */,
+				E2250C231DAAF41600492461 /* A380_mw.tga */,
+				E2250C241DAAF41600492461 /* A380_part1.tga */,
+				E2250C251DAAF41600492461 /* A380_part2.tga */,
+				E2250C261DAAF41600492461 /* A380_part3.tga */,
+				E2250C271DAAF41600492461 /* A380_R.tga */,
+				E2250C281DAAF41600492461 /* b737_800_2_T.tga */,
+				E2250C291DAAF41600492461 /* chrome1.tga */,
+			);
+			path = "Factory Livery";
+			sourceTree = "<group>";
+		};
 		E26E1C151D6C42FA0013B175 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -109,6 +162,8 @@
 				E25000741D6DC68D00C11438 /* DeviceAdvertisementsViewController.m */,
 				E22EFD0A1D717BCF00C7EC91 /* DeviceDataViewController.h */,
 				E22EFD0B1D717BCF00C7EC91 /* DeviceDataViewController.m */,
+				E2975F491DAAE2BC00361521 /* Device3DViewController.h */,
+				E2975F4A1DAAE2BC00361521 /* Device3DViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -172,6 +227,15 @@
 		E2CA7EB21D62FF5E00CA3156 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E2250C1C1DAAF36C00492461 /* Farmhouse Texture Bump Map .jpg */,
+				E2250C1D1DAAF36C00492461 /* Farmhouse Texture.jpg */,
+				E2250C181DAAF31F00492461 /* Farmhouse.mtl */,
+				E2250C191DAAF31F00492461 /* Farmhouse.obj */,
+				E23329371DAAF0EB0097095C /* A380.mtl */,
+				E23329381DAAF0EB0097095C /* A380.obj */,
+				E2250C201DAAF41600492461 /* Factory Livery */,
+				E2975F4C1DAAE81B00361521 /* RubixCube.mtl */,
+				E2975F4D1DAAE81B00361521 /* RubixCube.obj */,
 				E2CA7EB31D62FF5E00CA3156 /* main.m */,
 				E29B3E5D1D6AE194002B500A /* PrefixHeader.pch */,
 			);
@@ -249,8 +313,25 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2250C1E1DAAF36C00492461 /* Farmhouse Texture Bump Map .jpg in Resources */,
+				E2250C2F1DAAF41600492461 /* A380_part3.tga in Resources */,
+				E2250C321DAAF41600492461 /* chrome1.tga in Resources */,
+				E2250C2A1DAAF41600492461 /* a380_01.tga in Resources */,
+				E2975F4E1DAAE81B00361521 /* RubixCube.mtl in Resources */,
+				E2975F4F1DAAE81B00361521 /* RubixCube.obj in Resources */,
+				E2250C2E1DAAF41600492461 /* A380_part2.tga in Resources */,
 				E2CA7EC21D62FF5E00CA3156 /* LaunchScreen.storyboard in Resources */,
+				E2250C2B1DAAF41600492461 /* A380_L.tga in Resources */,
+				E2250C1B1DAAF31F00492461 /* Farmhouse.obj in Resources */,
+				E23329391DAAF0EB0097095C /* A380.mtl in Resources */,
+				E2250C301DAAF41600492461 /* A380_R.tga in Resources */,
+				E2250C1A1DAAF31F00492461 /* Farmhouse.mtl in Resources */,
+				E2250C1F1DAAF36C00492461 /* Farmhouse Texture.jpg in Resources */,
 				E2CA7EBF1D62FF5E00CA3156 /* Assets.xcassets in Resources */,
+				E2250C2D1DAAF41600492461 /* A380_part1.tga in Resources */,
+				E233293A1DAAF0EB0097095C /* A380.obj in Resources */,
+				E2250C311DAAF41600492461 /* b737_800_2_T.tga in Resources */,
+				E2250C2C1DAAF41600492461 /* A380_mw.tga in Resources */,
 				E2CA7EBD1D62FF5E00CA3156 /* Main.storyboard in Resources */,
 				E252DFDD1D6EDE73005AEF28 /* bledevices.json in Resources */,
 			);
@@ -267,6 +348,7 @@
 				E252DFE21D6F2CCB005AEF28 /* CoolUtility.m in Sources */,
 				E252DFE01D6F1272005AEF28 /* SensorFeature.m in Sources */,
 				E282BC4C1D74F016000DC84A /* ChartView.m in Sources */,
+				E2975F4B1DAAE2BC00361521 /* Device3DViewController.m in Sources */,
 				E29B3E601D6B0747002B500A /* DeviceListViewController.m in Sources */,
 				E2CA7ED21D63040500CA3156 /* BLEDevice.m in Sources */,
 				E26E1C0E1D6BF5050013B175 /* DialogIoTSensor.m in Sources */,
