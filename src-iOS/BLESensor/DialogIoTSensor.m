@@ -113,7 +113,8 @@ static NSDictionary* _featureConfigs;
                                @"dimension": @4,
                                @"valueSize": @2,
                                @"unit": @"",
-                               @"precision": @0
+                               @"precision": @2,
+                               @"ratio": @32768
                                }
                            };
     }
