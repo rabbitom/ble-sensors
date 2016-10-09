@@ -41,7 +41,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceConnectionStatusChanged:) name:@"BLEDevice.Disconnected" object:self.device];
     
     self.navigationItem.title = [self.device deviceNameByDefault:@"Unnamed Device"];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Connect" style:UIBarButtonItemStyleBordered target:self action:@selector(toggleConnect:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Connect" style:UIBarButtonItemStylePlain target:self action:@selector(toggleConnect:)];
     self.connectBtn = self.navigationItem.rightBarButtonItem;
     [self updateConnectBtn];
 }

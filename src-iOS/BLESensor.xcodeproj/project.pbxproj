@@ -17,6 +17,9 @@
 		E26E1C111D6C37620013B175 /* DeviceServicesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E26E1C101D6C37620013B175 /* DeviceServicesViewController.m */; };
 		E26E1C141D6C426D0013B175 /* BLEUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = E26E1C131D6C426D0013B175 /* BLEUtility.m */; };
 		E282BC4C1D74F016000DC84A /* ChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = E282BC4B1D74F016000DC84A /* ChartView.m */; };
+		E2975F441DAAD82C00361521 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2975F431DAAD82C00361521 /* OpenGLES.framework */; };
+		E2975F461DAAD83100361521 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2975F451DAAD83100361521 /* QuartzCore.framework */; };
+		E2975F481DAAD84000361521 /* NinevehGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2975F471DAAD84000361521 /* NinevehGL.framework */; };
 		E29B3E601D6B0747002B500A /* DeviceListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E29B3E5F1D6B0747002B500A /* DeviceListViewController.m */; };
 		E2CA7EB41D62FF5E00CA3156 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E2CA7EB31D62FF5E00CA3156 /* main.m */; };
 		E2CA7EB71D62FF5E00CA3156 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E2CA7EB61D62FF5E00CA3156 /* AppDelegate.m */; };
@@ -47,6 +50,9 @@
 		E26E1C171D6C470B0013B175 /* CoolUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoolUtility.h; sourceTree = "<group>"; };
 		E282BC4A1D74F016000DC84A /* ChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChartView.h; sourceTree = "<group>"; };
 		E282BC4B1D74F016000DC84A /* ChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChartView.m; sourceTree = "<group>"; };
+		E2975F431DAAD82C00361521 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		E2975F451DAAD83100361521 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		E2975F471DAAD84000361521 /* NinevehGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NinevehGL.framework; sourceTree = "<group>"; };
 		E29B3E5D1D6AE194002B500A /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		E29B3E5E1D6B0747002B500A /* DeviceListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceListViewController.h; sourceTree = "<group>"; };
 		E29B3E5F1D6B0747002B500A /* DeviceListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceListViewController.m; sourceTree = "<group>"; };
@@ -69,6 +75,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2975F481DAAD84000361521 /* NinevehGL.framework in Frameworks */,
+				E2975F461DAAD83100361521 /* QuartzCore.framework in Frameworks */,
+				E2975F441DAAD82C00361521 /* OpenGLES.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,11 +122,22 @@
 			name = Common;
 			sourceTree = "<group>";
 		};
+		E2975F421DAAD82C00361521 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E2975F471DAAD84000361521 /* NinevehGL.framework */,
+				E2975F451DAAD83100361521 /* QuartzCore.framework */,
+				E2975F431DAAD82C00361521 /* OpenGLES.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		E2CA7EA61D62FF5E00CA3156 = {
 			isa = PBXGroup;
 			children = (
 				E2CA7EB11D62FF5E00CA3156 /* BLESensor */,
 				E2CA7EB01D62FF5E00CA3156 /* Products */,
+				E2975F421DAAD82C00361521 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -197,7 +217,7 @@
 		E2CA7EA71D62FF5E00CA3156 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = CoolTools;
 				TargetAttributes = {
 					E2CA7EAE1D62FF5E00CA3156 = {
@@ -296,8 +316,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -319,7 +341,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -340,8 +362,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -357,7 +381,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -370,10 +394,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/BLESensor/PrefixHeader.pch";
 				INFOPLIST_FILE = BLESensor/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = erabbit.BLESensor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -387,10 +415,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/BLESensor/PrefixHeader.pch";
 				INFOPLIST_FILE = BLESensor/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = erabbit.BLESensor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
