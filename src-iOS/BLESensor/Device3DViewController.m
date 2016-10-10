@@ -18,6 +18,7 @@
     DialogIoTSensor *sensor;
     SensorFeature *sfl;
     SensorFeature *gyro;
+    float ax, ay, az;
 }
 @end
 
@@ -36,8 +37,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    nglGlobalColorFormat(NGLColorFormatRGB);
-    nglGlobalFlush();
+//    nglGlobalColorFormat(NGLColorFormatRGB);
+//    nglGlobalFlush();
     mesh = [[NGLMesh alloc] initWithFile: @"A380.obj" settings:@{kNGLMeshCentralizeYes:@YES, kNGLMeshKeyNormalize:@1.0f} delegate:nil];
     camera = [[NGLCamera alloc] initWithMeshes: mesh, nil];
     quaternion = [[NGLQuaternion alloc] init];
@@ -74,32 +75,28 @@
 
 - (void) drawView {
     //[mesh rotateWithQuaternion:quaternion];
-    float ax = [(NSNumber*)gyro.values[0] floatValue];
-    float ay = [(NSNumber*)gyro.values[1] floatValue];
-    float az = [(NSNumber*)gyro.values[2] floatValue];
-    mesh.rotateX += ax;
-    mesh.rotateY += ay;
-    mesh.rotateZ += az;
+    mesh.rotateX = ax;
+    mesh.rotateY = ay;
+    mesh.rotateZ = az;
     [camera drawCamera];
-    mesh.rotateX = 0;
-    mesh.rotateY = 0;
-    mesh.rotateZ = 0;
 }
 
 - (void)onDeviceValueChanged: (NSNotification*)notification {
     NSString *key = notification.userInfo[@"key"];
     if(key == nil)
         return;
-//    if([key isEqualToString:sfl.name]) {
-//        float w = [(NSNumber*)sfl.values[0] floatValue];
-//        float x = [(NSNumber*)sfl.values[1] floatValue];
-//        float y = [(NSNumber*)sfl.values[2] floatValue];
-//        float z = [(NSNumber*)sfl.values[3] floatValue];
-//        [quaternion rotateByQuaternionVector:nglVec4Make(x, y, z, w) mode:NGLAddModeSet];
-//    }
-//    if([key isEqualToString:gyro.name]) {
-//        
-//    }
+    if([key isEqualToString:sfl.name]) {
+        float w = [(NSNumber*)sfl.values[0] floatValue];
+        float x = [(NSNumber*)sfl.values[1] floatValue];
+        float y = [(NSNumber*)sfl.values[2] floatValue];
+        float z = [(NSNumber*)sfl.values[3] floatValue];
+        [quaternion rotateByQuaternionVector:nglVec4Make(x, y, z, w) mode:NGLAddModeSet];
+    }
+    if([key isEqualToString:gyro.name]) {
+        ax = [(NSNumber*)gyro.values[0] floatValue];
+        ay = [(NSNumber*)gyro.values[1] floatValue];
+        az = [(NSNumber*)gyro.values[2] floatValue];
+    }
 }
 
 @end
