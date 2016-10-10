@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		E22EFD0C1D717BCF00C7EC91 /* DeviceDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E22EFD0B1D717BCF00C7EC91 /* DeviceDataViewController.m */; };
-		E233293A1DAAF0EB0097095C /* A380.obj in Resources */ = {isa = PBXBuildFile; fileRef = E23329381DAAF0EB0097095C /* A380.obj */; };
 		E25000721D6DA18800C11438 /* DeviceDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E25000711D6DA18800C11438 /* DeviceDetailsViewController.m */; };
 		E25000751D6DC68D00C11438 /* DeviceAdvertisementsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E25000741D6DC68D00C11438 /* DeviceAdvertisementsViewController.m */; };
 		E252DFDD1D6EDE73005AEF28 /* bledevices.json in Resources */ = {isa = PBXBuildFile; fileRef = E252DFDC1D6EDE73005AEF28 /* bledevices.json */; };
@@ -30,12 +29,14 @@
 		E2CA7EC21D62FF5E00CA3156 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2CA7EC01D62FF5E00CA3156 /* LaunchScreen.storyboard */; };
 		E2CA7ED21D63040500CA3156 /* BLEDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = E2CA7ED11D63040500CA3156 /* BLEDevice.m */; };
 		E2CA7ED51D6304CE00CA3156 /* BLEDevicesManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E2CA7ED41D6304CE00CA3156 /* BLEDevicesManager.m */; };
+		E2CFD1C61DAB62B10031E486 /* Couch.mtl in Resources */ = {isa = PBXBuildFile; fileRef = E2CFD1C21DAB62B10031E486 /* Couch.mtl */; };
+		E2CFD1C71DAB62B10031E486 /* Couch.obj in Resources */ = {isa = PBXBuildFile; fileRef = E2CFD1C31DAB62B10031E486 /* Couch.obj */; };
+		E2CFD1C81DAB62B10031E486 /* Couch_diff.tga in Resources */ = {isa = PBXBuildFile; fileRef = E2CFD1C51DAB62B10031E486 /* Couch_diff.tga */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		E22EFD0A1D717BCF00C7EC91 /* DeviceDataViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceDataViewController.h; sourceTree = "<group>"; };
 		E22EFD0B1D717BCF00C7EC91 /* DeviceDataViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceDataViewController.m; sourceTree = "<group>"; };
-		E23329381DAAF0EB0097095C /* A380.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = A380.obj; sourceTree = "<group>"; };
 		E25000701D6DA18800C11438 /* DeviceDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceDetailsViewController.h; sourceTree = "<group>"; };
 		E25000711D6DA18800C11438 /* DeviceDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceDetailsViewController.m; sourceTree = "<group>"; };
 		E25000731D6DC68D00C11438 /* DeviceAdvertisementsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceAdvertisementsViewController.h; sourceTree = "<group>"; };
@@ -73,6 +74,9 @@
 		E2CA7ED11D63040500CA3156 /* BLEDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLEDevice.m; sourceTree = "<group>"; };
 		E2CA7ED31D6304CE00CA3156 /* BLEDevicesManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLEDevicesManager.h; sourceTree = "<group>"; };
 		E2CA7ED41D6304CE00CA3156 /* BLEDevicesManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLEDevicesManager.m; sourceTree = "<group>"; };
+		E2CFD1C21DAB62B10031E486 /* Couch.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Couch.mtl; sourceTree = "<group>"; };
+		E2CFD1C31DAB62B10031E486 /* Couch.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Couch.obj; sourceTree = "<group>"; };
+		E2CFD1C51DAB62B10031E486 /* Couch_diff.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = Couch_diff.tga; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +175,7 @@
 				E2CA7EBE1D62FF5E00CA3156 /* Assets.xcassets */,
 				E2CA7EC01D62FF5E00CA3156 /* LaunchScreen.storyboard */,
 				E2CA7EC31D62FF5E00CA3156 /* Info.plist */,
+				E2CFD1C11DAB62B10031E486 /* Couch */,
 				E2CA7EB21D62FF5E00CA3156 /* Supporting Files */,
 			);
 			path = BLESensor;
@@ -179,7 +184,6 @@
 		E2CA7EB21D62FF5E00CA3156 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				E23329381DAAF0EB0097095C /* A380.obj */,
 				E2CA7EB31D62FF5E00CA3156 /* main.m */,
 				E29B3E5D1D6AE194002B500A /* PrefixHeader.pch */,
 			);
@@ -197,6 +201,24 @@
 				E2CA7ED41D6304CE00CA3156 /* BLEDevicesManager.m */,
 			);
 			name = BLE;
+			sourceTree = "<group>";
+		};
+		E2CFD1C11DAB62B10031E486 /* Couch */ = {
+			isa = PBXGroup;
+			children = (
+				E2CFD1C21DAB62B10031E486 /* Couch.mtl */,
+				E2CFD1C31DAB62B10031E486 /* Couch.obj */,
+				E2CFD1C41DAB62B10031E486 /* Texture */,
+			);
+			path = Couch;
+			sourceTree = "<group>";
+		};
+		E2CFD1C41DAB62B10031E486 /* Texture */ = {
+			isa = PBXGroup;
+			children = (
+				E2CFD1C51DAB62B10031E486 /* Couch_diff.tga */,
+			);
+			path = Texture;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -257,10 +279,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2CFD1C71DAB62B10031E486 /* Couch.obj in Resources */,
 				E2CA7EC21D62FF5E00CA3156 /* LaunchScreen.storyboard in Resources */,
+				E2CFD1C81DAB62B10031E486 /* Couch_diff.tga in Resources */,
 				E2CA7EBF1D62FF5E00CA3156 /* Assets.xcassets in Resources */,
-				E233293A1DAAF0EB0097095C /* A380.obj in Resources */,
 				E2CA7EBD1D62FF5E00CA3156 /* Main.storyboard in Resources */,
+				E2CFD1C61DAB62B10031E486 /* Couch.mtl in Resources */,
 				E252DFDD1D6EDE73005AEF28 /* bledevices.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

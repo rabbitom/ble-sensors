@@ -39,7 +39,7 @@
     // Do any additional setup after loading the view.
 //    nglGlobalColorFormat(NGLColorFormatRGB);
 //    nglGlobalFlush();
-    mesh = [[NGLMesh alloc] initWithFile: @"A380.obj" settings:@{kNGLMeshCentralizeYes:@YES, kNGLMeshKeyNormalize:@1.0f} delegate:nil];
+    mesh = [[NGLMesh alloc] initWithFile: @"Couch.obj" settings:@{kNGLMeshCentralizeYes:@YES, kNGLMeshKeyNormalize:@0.5f} delegate:nil];
     camera = [[NGLCamera alloc] initWithMeshes: mesh, nil];
     quaternion = [[NGLQuaternion alloc] init];
 }
