@@ -16,4 +16,4 @@ Connect to BLE(Bluetooth Low Energy) enabled sensors and read data.
   * We referenced [this Evothings project](https://evothings.com/dialog-iot-sensor-starter-guide/) when start to work with this kit.
 
 * CC2650 SensorTag
-  * Official page[Simplelink SensorTag - TI.com](http://www.ti.com/ww/en/wireless_connectivity/sensortag/index.html)
+  * Official page: [Simplelink SensorTag - TI.com](http://www.ti.com/ww/en/wireless_connectivity/sensortag/index.html)
