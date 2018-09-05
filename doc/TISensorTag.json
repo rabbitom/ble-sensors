@@ -1,0 +1,145 @@
+{
+    "version": "2017-04-17",
+    "advertisement": {
+        "name": "SensorTag 2.0",
+        "service": "aa80",
+        "nameFilterPattern": ".+"
+    },
+    "services": [
+        {
+            "uuid": "f000aa00-0451-4000-b000-000000000000",
+            "name": "TI_Temperature",
+            "characteristics": [
+                {
+                    "uuid": "f000aa01-0451-4000-b000-000000000000",
+                    "name": "Temperature_Data",
+                    "properties": [
+                        "read", "notify"
+                    ]
+                },
+                {
+                    "uuid": "f000aa02-0451-4000-b000-000000000000",
+                    "name": "Temperature_Config",
+                    "properties": [
+                        "read", "write"
+                    ]
+                },
+                {
+                    "uuid": "f000aa03-0451-4000-b000-000000000000",
+                    "name": "Temperature_Period",
+                    "properties": [
+                        "read", "write"
+                    ]
+                }
+            ]
+        },
+        {
+            "uuid": "f000aa20-0451-4000-b000-000000000000",
+            "name": "TI_Humidity",
+            "characteristics": [
+                {
+                    "uuid": "f000aa21-0451-4000-b000-000000000000",
+                    "name": "Humidity_Data",
+                    "properties": [
+                        "read", "notify"
+                    ]
+                },
+                {
+                    "uuid": "f000aa22-0451-4000-b000-000000000000",
+                    "name": "Humidity_Config",
+                    "properties": [
+                        "read", "write"
+                    ]
+                },
+                {
+                    "uuid": "f000aa23-0451-4000-b000-000000000000",
+                    "name": "Humidity_Period",
+                    "properties": [
+                        "read", "write"
+                    ]
+                }
+            ]
+        },
+        {
+            "uuid": "f000aa40-0451-4000-b000-000000000000",
+            "name": "TI_Barometer",
+            "characteristics": [
+                {
+                    "uuid": "f000aa41-0451-4000-b000-000000000000",
+                    "name": "Barometer_Data",
+                    "properties": [
+                        "read", "notify"
+                    ]
+                },
+                {
+                    "uuid": "f000aa42-0451-4000-b000-000000000000",
+                    "name": "Barometer_Config",
+                    "properties": [
+                        "read", "write"
+                    ]
+                },
+                {
+                    "uuid": "f000aa43-0451-4000-b000-000000000000",
+                    "name": "Barometer_Period",
+                    "properties": [
+                        "read", "write"
+                    ]
+                }
+            ]
+        },
+        {
+            "uuid": "f000aa70-0451-4000-b000-000000000000",
+            "name": "TI_Light_Sensor",
+            "characteristics": [
+                {
+                    "uuid": "f000aa71-0451-4000-b000-000000000000",
+                    "name": "Light_Sensor_Data",
+                    "properties": [
+                        "read", "notify"
+                    ]
+                },
+                {
+                    "uuid": "f000aa72-0451-4000-b000-000000000000",
+                    "name": "Light_Sensor_Config",
+                    "properties": [
+                        "read", "write"
+                    ]
+                },
+                {
+                    "uuid": "f000aa73-0451-4000-b000-000000000000",
+                    "name": "Light_Sensor_Period",
+                    "properties": [
+                        "read", "write"
+                    ]
+                }
+            ]
+        },
+        {
+            "uuid": "f000aa80-0451-4000-b000-000000000000",
+            "name": "TI_Movement",
+            "characteristics": [
+                {
+                    "uuid": "f000aa81-0451-4000-b000-000000000000",
+                    "name": "Movement_Data",
+                    "properties": [
+                        "read", "notify"
+                    ]
+                },
+                {
+                    "uuid": "f000aa82-0451-4000-b000-000000000000",
+                    "name": "Movement_Config",
+                    "properties": [
+                        "read", "write"
+                    ]
+                },
+                {
+                    "uuid": "f000aa83-0451-4000-b000-000000000000",
+                    "name": "Movement_Period",
+                    "properties": [
+                        "read", "write"
+                    ]
+                }
+            ]
+        }
+    ]
+}
