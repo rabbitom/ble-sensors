@@ -15,4 +15,5 @@
   * 我们在开发时参考了[这个Evothings项目](https://evothings.com/dialog-iot-sensor-starter-guide/)
 
 * CC2650 SensorTag
+  * [简介](doc/TISensorTag-zh.md)
   * 官方网站：[Simplelink SensorTag - TI.com](http://www.ti.com/ww/en/wireless_connectivity/sensortag/index.html)
