@@ -79,7 +79,7 @@
                     ]
                 },
                 {
-                    "uuid": "f000aa43-0451-4000-b000-000000000000",
+                    "uuid": "f000aa44-0451-4000-b000-000000000000",
                     "name": "Barometer_Period",
                     "properties": [
                         "read", "write"
