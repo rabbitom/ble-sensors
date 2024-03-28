@@ -1,0 +1,254 @@
+{
+    "version": "2021-04-20",
+    "class": "BLESensor",
+    "advertisement": {
+        "service": "EF680100-9B35-4933-9B10-52FFA9740042",
+        "name": "Thingy"
+    },
+    "services": [
+        {
+            "uuid": "EF680400-9B35-4933-9B10-52FFA9740042",
+            "name": "运动传感器",
+            "characteristics": [
+                {
+                    "uuid": "EF68040A-9B35-4933-9B10-52FFA9740042",
+                    "name": "加速度",
+                    "unit": "m/s2",
+                    "properties": [
+                        "notify"
+                    ],
+                    "function": "feature",
+                    "type": "array",
+                    "dimension": 3,
+                    "fields": [
+                        {
+                            "name": "x",
+                            "format": "Float32",
+                            "byteLength": 4
+                        },
+                        {
+                            "name": "y",
+                            "format": "Float32",
+                            "byteLength": 4
+                        },
+                        {
+                            "name": "z",
+                            "format": "Float32",
+                            "byteLength": 4
+                        }
+                    ]
+                },
+                {
+                    "uuid": "EF680409-9B35-4933-9B10-52FFA9740042",
+                    "name": "指南针",
+                    "unit": "deg",
+                    "properties": [
+                        "notify"
+                    ],
+                    "function": "feature",
+                    "type": "array",
+                    "dimension": 1,
+                    "conversions": [
+                        {
+                            "operator": "divide",
+                            "format": "UInt32BE",
+                            "value": [0, 1, 0, 0]
+                        }
+                    ],
+                    "fields": [
+                        {
+                            "name": "angle",
+                            "format": "UInt32LE",
+                            "byteLength": 4
+                        }
+                    ]
+                },
+                {
+                    "uuid": "EF680407-9B35-4933-9B10-52FFA9740042",
+                    "name": "旋转",
+                    "unit": "deg",
+                    "description": "欧拉角",
+                    "properties": [
+                        "notify"
+                    ],
+                    "function": "feature",
+                    "type": "array",
+                    "dimension": 3,
+                    "conversions": [
+                        {
+                            "operator": "divide",
+                            "format": "UInt32BE",
+                            "value": [0, 1, 0, 0]
+                        }
+                    ],
+                    "fields": [
+                        {
+                            "name": "roll",
+                            "format": "Int32LE",
+                            "byteLength": 4
+                        },
+                        {
+                            "name": "pitch",
+                            "format": "Int32LE",
+                            "byteLength": 4
+                        },
+                        {
+                            "name": "yaw",
+                            "format": "Int32LE",
+                            "byteLength": 4
+                        }
+                    ]
+                },
+                {
+                    "uuid": "EF680406-9B35-4933-9B10-52FFA9740042",
+                    "name": "九轴",
+                    "description": "加速度计、陀螺仪和磁力计的原始数据",
+                    "properties": [
+                        "notify"
+                    ],
+                    "function": "feature",
+                    "type": "array",
+                    "dimension": 9,
+                    "conversions": [
+                        {
+                            "operator": "divide",
+                            "format": "UInt16BE",
+                            "value": [128, 0]
+                        }
+                    ],
+                    "fields": [
+                        {
+                            "name": "a-x",
+                            "format": "UInt16BE",
+                            "byteLength": 2
+                        },
+                        {
+                            "name": "a-y",
+                            "format": "UInt16BE",
+                            "byteLength": 2
+                        },
+                        {
+                            "name": "a-z",
+                            "format": "UInt16BE",
+                            "byteLength": 2
+                        },
+                        {
+                            "name": "g-x",
+                            "format": "UInt16BE",
+                            "byteLength": 2
+                        },
+                        {
+                            "name": "g-y",
+                            "format": "UInt16BE",
+                            "byteLength": 2
+                        },
+                        {
+                            "name": "g-z",
+                            "format": "UInt16BE",
+                            "byteLength": 2
+                        },
+                        {
+                            "name": "c-x",
+                            "format": "UInt16BE",
+                            "byteLength": 2
+                        },
+                        {
+                            "name": "c-y",
+                            "format": "UInt16BE",
+                            "byteLength": 2
+                        },
+                        {
+                            "name": "c-z",
+                            "format": "UInt16BE",
+                            "byteLength": 2
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "uuid": "EF680200-9B35-4933-9B10-52FFA9740042",
+            "name": "环境传感器",
+            "characteristics": [
+                {
+                    "uuid": "EF680201-9B35-4933-9B10-52FFA9740042",
+                    "name": "温度",
+                    "unit": "℃",
+                    "properties": [
+                        "notify"
+                    ],
+                    "function": "feature",
+                    "type": "array",
+                    "dimension": 1,
+                    "fields": [
+                        {
+                            "name": "temperature",
+                            "format": "T16",
+                            "byteLength": 2
+                        }
+                    ]
+                },
+                {
+                    "uuid": "EF680202-9B35-4933-9B10-52FFA9740042",
+                    "name": "气压",
+                    "unit": "hPa",
+                    "properties": [
+                        "notify"
+                    ],
+                    "function": "feature",
+                    "type": "array",
+                    "dimension": 1,
+                    "fields": [
+                        {
+                            "name": "pressure",
+                            "format": "P40",
+                            "byteLength": 5
+                        }
+                    ]
+                },
+                {
+                    "uuid": "EF680203-9B35-4933-9B10-52FFA9740042",
+                    "name": "湿度",
+                    "unit": "%",
+                    "properties": [
+                        "notify"
+                    ],
+                    "function": "feature",
+                    "type": "array",
+                    "dimension": 1,
+                    "fields": [
+                        {
+                            "name": "humidity",
+                            "format": "UInt8",
+                            "byteLength": 1
+                        }
+                    ]
+                },
+                {
+                    "uuid": "EF680204-9B35-4933-9B10-52FFA9740042",
+                    "name": "空气质量",
+                    "description": "二氧化碳和TVOC",
+                    "unit": "ppm,ppb",
+                    "properties": [
+                        "notify"
+                    ],
+                    "function": "feature",
+                    "type": "array",
+                    "dimension": 2,
+                    "fields": [
+                        {
+                            "name": "eCO2",
+                            "format": "UInt16LE",
+                            "byteLength": 2
+                        },
+                        {
+                            "name": "tvoc",
+                            "format": "UInt16LE",
+                            "byteLength": 2
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
